@@ -133,10 +133,9 @@ const colorScheme = {
 
 type SyntheticPair = 'BTC' | 'ETH' | 'BNB' | 'SOL'
 
-const ExchangeCard = React.memo(({ exchange, colors, isShaking, isUnclickable, handleChoosePairs }: {
+const ExchangeCard = React.memo(({ exchange, colors, isUnclickable, handleChoosePairs }: {
   exchange: { name: string; logo: string };
   colors: typeof colorScheme.light | typeof colorScheme.dark;
-  isShaking: boolean;
   isUnclickable: boolean;
   handleChoosePairs: (name: string) => void;
 }) => (
@@ -338,8 +337,13 @@ export function CryptoWatchlistDashboard() {
       }
 
       setShowModal(false)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error downloading markets:', error)
+      if (error instanceof Error) {
+        alert(`Error downloading markets: ${error.message}`)
+      } else {
+        alert('An unknown error occurred while downloading markets')
+      }
     } finally {
       setLoading(false)
     }
@@ -348,12 +352,13 @@ export function CryptoWatchlistDashboard() {
   const colors = isDarkMode ? colorScheme.dark : colorScheme.light
   const exchanges = marketType === 'spot' ? spotExchanges : futuresExchanges
 
-  const handleSelectAllAssets = (checked: boolean) => {
-    setAllAssetsSelected(checked)
-    if (checked) {
-      setSelectedQuoteAssets(quoteAssets)
+  const handleSelectAllAssets = (checked: boolean | 'indeterminate') => {
+    const isChecked = checked === true;
+    setAllAssetsSelected(isChecked);
+    if (isChecked) {
+      setSelectedQuoteAssets(quoteAssets);
     } else {
-      setSelectedQuoteAssets([])
+      setSelectedQuoteAssets([]);
     }
   }
 
@@ -442,7 +447,6 @@ export function CryptoWatchlistDashboard() {
                     <ExchangeCard
                       exchange={exchange}
                       colors={colors}
-                      isShaking={isShaking}
                       isUnclickable={showBackgroundGif || isExploding}
                       handleChoosePairs={handleChoosePairs}
                     />
@@ -489,7 +493,7 @@ export function CryptoWatchlistDashboard() {
                           <Checkbox 
                             id="select-all" 
                             checked={allAssetsSelected}
-                            onCheckedChange={(checked) => handleSelectAllAssets(checked)}
+                            onCheckedChange={handleSelectAllAssets}
                             className="border-2 border-ftx-teal"
                           />
                         </div>

@@ -535,6 +535,7 @@ export function CryptoWatchlistDashboard() {
                         Total assets selected: {filteredMarketsCount}
                       </p>
                       {filteredMarketsCount > 1000 && (
+                        // eslint-disable-next-line react/no-unescaped-entities
                         <p className="text-sm text-yellow-500 mb-4">
                           Note: More than 1000 assets selected. The download will be split into multiple files.
                         </p>

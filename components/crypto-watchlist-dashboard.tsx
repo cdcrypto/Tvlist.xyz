@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -112,7 +113,13 @@ const futuresColors = {
 
 type SyntheticPair = 'BTC' | 'ETH' | 'BNB' | 'SOL';
 
-const ExchangeCard = React.memo(({ exchange, colors, isShaking, isUnclickable, handleChoosePairs }) => (
+const ExchangeCard = React.memo(({ exchange, colors, isShaking, isUnclickable, handleChoosePairs }: {
+  exchange: { name: string; logo: string };
+  colors: { card: string; text: string; button: string };
+  isShaking: boolean;
+  isUnclickable: boolean;
+  handleChoosePairs: (name: string) => void;
+}) => (
   <Card 
     className={`${colors.card} backdrop-blur-md border ${isUnclickable ? 'border-neon-green' : 'border-gray-200'} shadow-lg hover:shadow-xl transition-shadow duration-300`}
     isShaking={isShaking}
@@ -120,7 +127,7 @@ const ExchangeCard = React.memo(({ exchange, colors, isShaking, isUnclickable, h
   >
     <CardHeader className="flex flex-row items-center justify-between pb-2">
       <CardTitle className={`text-xl font-medium ${colors.text}`}>{exchange.name}</CardTitle>
-      <img src={exchange.logo} alt={`${exchange.name} logo`} className="w-10 h-10" />
+      <Image src={exchange.logo} alt={`${exchange.name} logo`} width={40} height={40} />
     </CardHeader>
     <CardContent>
       <p className={`text-sm ${colors.text}`}>
@@ -137,6 +144,8 @@ const ExchangeCard = React.memo(({ exchange, colors, isShaking, isUnclickable, h
     </CardFooter>
   </Card>
 ));
+
+ExchangeCard.displayName = 'ExchangeCard';
 
 export function CryptoWatchlistDashboard() {
   const [marketType, setMarketType] = useState('spot')
@@ -328,10 +337,12 @@ export function CryptoWatchlistDashboard() {
     <div className="min-h-screen relative overflow-hidden">
       {showBackgroundGif && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-          <img
+          <Image
             src="https://s11.gifyu.com/images/SAtDO.gif"
             alt="Leverage background"
-            className="w-full h-full object-cover opacity-50"
+            layout="fill"
+            objectFit="cover"
+            className="opacity-50"
           />
         </div>
       )}
@@ -366,7 +377,7 @@ export function CryptoWatchlistDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {exchanges.map((exchange, index) => (
+          {exchanges.map((exchange) => (
             <motion.div
               key={exchange.name}
               initial={{ opacity: 0, y: 20 }}

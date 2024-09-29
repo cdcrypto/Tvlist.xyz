@@ -108,23 +108,23 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
         ]);
 
         const allMarkets: Market[] = [
-          ...binanceSpot.markets.map((m: Market) => ({ ...m, exchange: 'Binance', type: 'spot' })),
-          ...binanceFutures.markets.map((m: Market) => ({ ...m, exchange: 'Binance', type: 'futures' })),
-          ...bybitSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bybit', type: 'spot' })),
-          ...bybitFutures.markets.map((m: Market) => ({ ...m, exchange: 'Bybit', type: 'futures' })),
-          ...bitgetSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bitget', type: 'spot' })),
-          ...bitgetFutures.markets.map((m: Market) => ({ ...m, exchange: 'Bitget', type: 'futures' })),
-          ...kucoinSpot.markets.map((m: Market) => ({ ...m, exchange: 'KuCoin', type: 'spot' })),
-          ...kucoinFutures.markets.map((m: Market) => ({ ...m, exchange: 'KuCoin', type: 'futures' })),
-          ...bitfinexSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bitfinex', type: 'spot' })),
-          ...dydxMarkets.markets.map((m: Market) => ({ ...m, exchange: 'dYdX', type: 'futures' })),
-          ...okxSpot.markets.map((m: Market) => ({ ...m, exchange: 'OKX', type: 'spot' })),
-          ...okxFutures.markets.map((m: Market) => ({ ...m, exchange: 'OKX', type: 'futures' })),
-          ...mexcSpot.markets.map((m: Market) => ({ ...m, exchange: 'MEXC', type: 'spot' })),
-          ...mexcFutures.markets.map((m: Market) => ({ ...m, exchange: 'MEXC', type: 'futures' })),
-          ...poloniexSpot.markets.map((m: Market) => ({ ...m, exchange: 'Poloniex', type: 'spot' })),
-          ...krakenSpot.markets.map((m: Market) => ({ ...m, exchange: 'Kraken', type: 'spot' })),
-          ...cryptocomSpot.markets.map((m: Market) => ({ ...m, exchange: 'Crypto.com', type: 'spot' }))
+          ...binanceSpot.markets.map((m: Market) => ({ ...m, exchange: 'Binance', type: 'spot' as const })),
+          ...binanceFutures.markets.map((m: Market) => ({ ...m, exchange: 'Binance', type: 'futures' as const })),
+          ...bybitSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bybit', type: 'spot' as const })),
+          ...bybitFutures.markets.map((m: Market) => ({ ...m, exchange: 'Bybit', type: 'futures' as const })),
+          ...bitgetSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bitget', type: 'spot' as const })),
+          ...bitgetFutures.markets.map((m: Market) => ({ ...m, exchange: 'Bitget', type: 'futures' as const })),
+          ...kucoinSpot.markets.map((m: Market) => ({ ...m, exchange: 'KuCoin', type: 'spot' as const })),
+          ...kucoinFutures.markets.map((m: Market) => ({ ...m, exchange: 'KuCoin', type: 'futures' as const })),
+          ...bitfinexSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bitfinex', type: 'spot' as const })),
+          ...dydxMarkets.markets.map((m: Market) => ({ ...m, exchange: 'dYdX', type: 'futures' as const })),
+          ...okxSpot.markets.map((m: Market) => ({ ...m, exchange: 'OKX', type: 'spot' as const })),
+          ...okxFutures.markets.map((m: Market) => ({ ...m, exchange: 'OKX', type: 'futures' as const })),
+          ...mexcSpot.markets.map((m: Market) => ({ ...m, exchange: 'MEXC', type: 'spot' as const })),
+          ...mexcFutures.markets.map((m: Market) => ({ ...m, exchange: 'MEXC', type: 'futures' as const })),
+          ...poloniexSpot.markets.map((m: Market) => ({ ...m, exchange: 'Poloniex', type: 'spot' as const })),
+          ...krakenSpot.markets.map((m: Market) => ({ ...m, exchange: 'Kraken', type: 'spot' as const })),
+          ...cryptocomSpot.markets.map((m: Market) => ({ ...m, exchange: 'Crypto.com', type: 'spot' as const }))
         ];
 
         const grouped = allMarkets.reduce((acc, market) => {
@@ -192,8 +192,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
   };
 
   const getTotalMarkets = (markets: { spot: Record<string, Market[]>, futures: Record<string, Market[]> }) => {
-    const spotTotal = Object.values(markets.spot).reduce((acc: number, curr: Market[]) => acc + curr.length, 0);
-    const futuresTotal = Object.values(markets.futures).reduce((acc: number, curr: Market[]) => acc + curr.length, 0);
+    const spotTotal = Object.values(markets.spot).reduce((acc, curr) => acc + curr.length, 0);
+    const futuresTotal = Object.values(markets.futures).reduce((acc, curr) => acc + curr.length, 0);
     return spotTotal + futuresTotal;
   };
 

@@ -21,11 +21,11 @@ import { fetchAllKrakenSpotMarkets } from '@/utils/fetchkraken'
 import { fetchAllSpotMarkets as fetchCryptocomSpotMarkets } from '@/utils/fetchcryptocom'
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import Header from './Header'  // Change this line
+import Header from './Header'
 import { MixNMatchMode } from './MixNMatchMode'
 import FakeSupportChat from './FakeSupportChat'
 import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
-import { fetchAllGateSpotMarkets, fetchAllGateFuturesMarkets } from '@/utils/fetchgate';
+import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
 import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
 
 const spotExchanges = [
@@ -456,10 +456,12 @@ export function CryptoWatchlistDashboard() {
           <div 
             className={`fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-500 ${showBackgroundGif ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           >
-            <img
+            <Image
               src="https://s11.gifyu.com/images/SAtDO.gif"
               alt="Leverage background"
               className="w-full h-full object-cover opacity-50"
+              width={1920}
+              height={1080}
             />
           </div>
         )}
@@ -468,11 +470,13 @@ export function CryptoWatchlistDashboard() {
             className={`fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-500 ${showMixNMatchGif ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           >
             <div className="w-full h-full overflow-hidden">
-              <img
+              <Image
                 src="https://s1.gifyu.com/images/SA5EY.gif"
                 alt="Mix N' Match background"
                 className="w-full h-full object-cover opacity-50 transform scale-125"
                 style={{ transformOrigin: 'center center' }}
+                width={1920}
+                height={1080}
               />
             </div>
           </div>

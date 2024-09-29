@@ -1,4 +1,6 @@
-import fetch from 'node-fetch';
+// bybit.js
+
+import fetch from 'cross-fetch';
 
 export default async function handler(req, res) {
   const { url } = req.query;

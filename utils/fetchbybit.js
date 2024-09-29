@@ -1,5 +1,6 @@
-const SPOT_API_URL = '/api/bybit?category=spot';
-const FUTURES_API_URL = '/api/bybit?category=linear';
+const CLOUDFLARE_WORKER_URL = 'https://your-worker.your-subdomain.workers.dev'; // Replace with your actual Worker URL
+const SPOT_API_URL = `${CLOUDFLARE_WORKER_URL}?url=${encodeURIComponent('https://api.bybit.com/v5/market/instruments-info?category=spot')}`;
+const FUTURES_API_URL = `${CLOUDFLARE_WORKER_URL}?url=${encodeURIComponent('https://api.bybit.com/v5/market/instruments-info?category=linear')}`;
 
 async function fetchMarkets(url, isSpot) {
     try {

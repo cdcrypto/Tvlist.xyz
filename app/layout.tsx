@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from './providers';
 import { MixNMatchProvider } from '@/contexts/MixNMatchContext';
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "TLX - Tradingview List Xpress",
@@ -42,6 +43,7 @@ export default function RootLayout({
         <MixNMatchProvider>
           <Providers>{children}</Providers>
         </MixNMatchProvider>
+        <Analytics />
       </body>
     </html>
   );

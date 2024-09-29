@@ -1,7 +1,6 @@
-// fetchbybit.js
-
-const SPOT_API_URL = `/api/bybit?url=${encodeURIComponent('https://api.bybit.com/v5/market/instruments-info?category=spot')}`;
-const FUTURES_API_URL = `/api/bybit?url=${encodeURIComponent('https://api.bybit.com/v2/public/symbols')}`;
+const PROXY_URL = 'https://api.allorigins.win/raw?url=';
+const SPOT_API_URL = `${PROXY_URL}${encodeURIComponent('https://api.bybit.com/v5/market/instruments-info?category=spot')}`;
+const FUTURES_API_URL = `${PROXY_URL}${encodeURIComponent('https://api.bybit.com/v5/market/instruments-info?category=linear')}`;
 
 async function fetchMarkets(url, isSpot) {
     try {
@@ -15,26 +14,16 @@ async function fetchMarkets(url, isSpot) {
             throw new Error(`API returned error: ${data.retMsg || 'Unknown error'}`);
         }
 
-        let symbols = [];
-        let statusToMatch = 'Trading'; // Default status for spot markets
-
-        if (isSpot) {
-            // For spot markets, symbols are in data.result.list
-            symbols = data.result.list;
-            statusToMatch = 'Trading';
-        } else {
-            // For futures markets, symbols are in data.result
-            symbols = data.result;
-            statusToMatch = 'Trading';
-        }
+        let symbols = data.result.list;
+        let statusToMatch = 'Trading'; // Default status for both spot and futures markets
 
         const markets = symbols
             .filter(symbol => symbol.status === statusToMatch)
             .map(symbol => {
                 return {
-                    symbol: `BYBIT:${isSpot ? symbol.symbol : symbol.name}${isSpot ? '' : '.P'}`,
-                    baseAsset: symbol.baseCoin || symbol.base_currency,
-                    quoteAsset: symbol.quoteCoin || symbol.quote_currency
+                    symbol: `BYBIT:${symbol.symbol}${isSpot ? '' : '.P'}`,
+                    baseAsset: symbol.baseCoin,
+                    quoteAsset: symbol.quoteCoin
                 };
             });
 

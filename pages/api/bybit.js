@@ -1,12 +1,18 @@
 // bybit.js
 
-import fetch from 'cross-fetch';
+export const config = {
+  runtime: 'edge',
+};
 
-export default async function handler(req, res) {
-  const { url } = req.query;
-  
+export default async function handler(req) {
+  const { searchParams } = new URL(req.url);
+  const url = searchParams.get('url');
+
   if (!url) {
-    return res.status(400).json({ error: 'URL parameter is required' });
+    return new Response(JSON.stringify({ error: 'URL parameter is required' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   console.log('Fetching URL:', url);
@@ -18,24 +24,44 @@ export default async function handler(req, res) {
         'Accept': 'application/json',
       },
     });
-    
+
     console.log('Response status:', response.status);
-    console.log('Response headers:', response.headers.raw());
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
+      return new Response(
+        JSON.stringify({
+          error: 'Error fetching data from Bybit',
+          message: `HTTP error! status: ${response.status} - ${errorText}`,
+        }),
+        {
+          status: response.status,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
-    
+
     const data = await response.json();
     console.log('Response data:', data);
 
-    res.status(200).json(data);
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (error) {
     console.error('Error fetching data from Bybit:', error);
-    res.status(500).json({ 
-      error: 'Error fetching data from Bybit',
-      message: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
+    return new Response(
+      JSON.stringify({
+        error: 'Error fetching data from Bybit',
+        message: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   }
 }

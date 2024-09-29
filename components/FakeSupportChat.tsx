@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MessageCircle, Minimize2 } from 'lucide-react';
 import Image from 'next/image';
-import ellisonImage from './ellison.png';
-import mattyImage from './matty.png';
-import samImage from './sam.png';
 
 interface FakeSupportChatProps {
   isDarkMode: boolean;
@@ -15,7 +12,7 @@ interface FakeSupportChatProps {
 const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, onClose }) => {
   const [message, setMessage] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
-  const [currentAgent, setCurrentAgent] = useState({ name: '', image: ellisonImage });
+  const [currentAgent, setCurrentAgent] = useState({ name: '', image: '/images/ellison.png' });
 
   const funnyMessages = [
     "Hodling your request... can i suck you in the meantime?! 🚀",
@@ -31,9 +28,9 @@ const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, o
   ];
 
   const agents = [
-    { name: 'Agent Ellison', image: ellisonImage },
-    { name: 'Agent Matty', image: mattyImage },
-    { name: 'Agent Sam', image: samImage },
+    { name: 'Agent Ellison', image: '/images/ellison.png' },
+    { name: 'Agent Matty', image: '/images/matty.png' },
+    { name: 'Agent Sam', image: '/images/sam.png' },
   ];
 
   useEffect(() => {
@@ -47,7 +44,7 @@ const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, o
 
       return () => clearInterval(interval);
     }
-  }, [isOpen, agents, funnyMessages]);
+  }, [isOpen]);
 
   const bgColor = isDarkMode ? 'bg-ftx-dark-blue-light' : 'bg-white';
   const textColor = isDarkMode ? 'text-white' : 'text-ftx-dark-blue';

@@ -10,8 +10,8 @@ import { fetchAllSpotMarkets as fetchMexcSpotMarkets, fetchAllFuturesMarkets as 
 import { fetchAllSpotMarkets as fetchPoloniexSpotMarkets } from '@/utils/fetchpoloniex';
 import { fetchAllKrakenSpotMarkets } from '@/utils/fetchkraken';
 import { fetchAllSpotMarkets as fetchCryptocomSpotMarkets } from '@/utils/fetchcryptocom';
-import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { useMixNMatchContext } from '@/contexts/MixNMatchContext';
+import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
 import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
 
@@ -39,11 +39,11 @@ type GroupedMarkets = {
   };
 };
 
-type FetchResult = {
+interface FetchResult {
   markets: { symbol: string; baseAsset: string; quoteAsset: string }[];
   assetCounts: Record<string, number>;
   quoteAssets: string[];
-};
+}
 
 const fetchWithRetry = async (fetchFunction: () => Promise<FetchResult>, retries = 3, delay = 2000): Promise<FetchResult> => {
   try {

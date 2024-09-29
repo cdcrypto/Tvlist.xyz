@@ -1,5 +1,3 @@
-// fetchbybit.js
-
 const SPOT_API_URL = `/api/bybit?url=${encodeURIComponent(
     'https://api.bybit.com/v5/market/instruments-info?category=spot'
   )}`;
@@ -15,21 +13,23 @@ const SPOT_API_URL = `/api/bybit?url=${encodeURIComponent(
       }
       const data = await response.json();
   
-      if (data.retCode !== 0) {
-        throw new Error(`API returned error: ${data.retMsg || 'Unknown error'}`);
+      // Handle different response formats for spot and futures
+      const retCode = data.retCode !== undefined ? data.retCode : data.ret_code;
+      const retMsg = data.retMsg !== undefined ? data.retMsg : data.ret_msg;
+  
+      if (retCode !== 0) {
+        throw new Error(`API returned error: ${retMsg || 'Unknown error'}`);
       }
   
       let symbols = [];
-      let statusToMatch = 'Trading'; // Default status for spot markets
+      let statusToMatch = 'Trading';
   
       if (isSpot) {
         // For spot markets, symbols are in data.result.list
         symbols = data.result.list;
-        statusToMatch = 'Trading';
       } else {
         // For futures markets, symbols are in data.result
         symbols = data.result;
-        statusToMatch = 'Trading';
       }
   
       const markets = symbols

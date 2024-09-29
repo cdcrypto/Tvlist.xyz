@@ -65,7 +65,7 @@ const spotExchanges = [
     name: 'Crypto.com',
     logo: 'https://assets.coingecko.com/markets/images/589/small/Crypto.jpg?1639719470',
   },
-];
+]
 
 const futuresExchanges = [
   {
@@ -96,7 +96,7 @@ const futuresExchanges = [
     name: 'MEXC',
     logo: 'https://assets.coingecko.com/markets/images/409/large/MEXC_logo_square.jpeg?1706864416',
   },
-];
+]
 
 const colorScheme = {
   light: {
@@ -129,9 +129,9 @@ const colorScheme = {
     logoBorder: "bg-ftx-dark-blue-light border border-ftx-teal",
     toggle: "bg-ftx-dark-blue-light",
   }
-};
+}
 
-type SyntheticPair = 'BTC' | 'ETH' | 'BNB' | 'SOL';
+type SyntheticPair = 'BTC' | 'ETH' | 'BNB' | 'SOL'
 
 const ExchangeCard = React.memo(({ exchange, colors, isShaking, isUnclickable, handleChoosePairs }: {
   exchange: { name: string; logo: string };
@@ -142,8 +142,6 @@ const ExchangeCard = React.memo(({ exchange, colors, isShaking, isUnclickable, h
 }) => (
   <Card 
     className={`${colors.card} backdrop-blur-md border ${isUnclickable ? 'border-neon-green' : 'border-gray-200'} shadow-lg hover:shadow-xl transition-shadow duration-300`}
-    isShaking={isShaking}
-    isUnclickable={isUnclickable}
   >
     <CardHeader className="flex flex-row items-center justify-between pb-2">
       <CardTitle className={`text-xl font-medium ${colors.text}`}>{exchange.name}</CardTitle>
@@ -171,12 +169,12 @@ const ExchangeCard = React.memo(({ exchange, colors, isShaking, isUnclickable, h
       </Button>
     </CardFooter>
   </Card>
-));
+))
 
-ExchangeCard.displayName = 'ExchangeCard';
+ExchangeCard.displayName = 'ExchangeCard'
 
 export function CryptoWatchlistDashboard() {
-  const [marketType, setMarketType] = useState('spot')
+  const [marketType, setMarketType] = useState<'spot' | 'futures'>('spot')
   const [loading, setLoading] = useState(false)
   const [selectedQuoteAssets, setSelectedQuoteAssets] = useState<string[]>([])
   const [showModal, setShowModal] = useState(false)
@@ -225,47 +223,47 @@ export function CryptoWatchlistDashboard() {
       
       if (fetchFunction) {
         fetchFunction().then(({ markets, assetCounts, quoteAssets }) => {
-          setAllMarkets(markets);
-          setAssetCounts(assetCounts);
-          setQuoteAssets(quoteAssets);
-          setLoading(false);
+          setAllMarkets(markets)
+          setAssetCounts(assetCounts)
+          setQuoteAssets(quoteAssets)
+          setLoading(false)
         }).catch(error => {
-          console.error('Error fetching markets:', error);
-          setLoading(false);
+          console.error('Error fetching markets:', error)
+          setLoading(false)
           // Display error to the user
-          alert(`Error fetching markets: ${error.message}`);
-        });
+          alert(`Error fetching markets: ${error.message}`)
+        })
       }
     }
-  }, [showModal, marketType, currentExchange]);
+  }, [showModal, marketType, currentExchange])
 
   useEffect(() => {
     const filteredMarkets = allMarkets.filter(market => 
       selectedQuoteAssets.includes(market.quoteAsset)
-    );
-    setFilteredMarketsCount(filteredMarkets.length);
-  }, [selectedQuoteAssets, allMarkets]);
+    )
+    setFilteredMarketsCount(filteredMarkets.length)
+  }, [selectedQuoteAssets, allMarkets])
 
   const sortedQuoteAssets = useMemo(() => {
-    return [...quoteAssets].sort((a, b) => assetCounts[b] - assetCounts[a]);
-  }, [quoteAssets, assetCounts]);
+    return [...quoteAssets].sort((a, b) => (assetCounts[b] || 0) - (assetCounts[a] || 0))
+  }, [quoteAssets, assetCounts])
 
   const handleQuoteAssetChange = (quoteAsset: string) => {
     setSelectedQuoteAssets(prev => {
       const newSelection = prev.includes(quoteAsset)
         ? prev.filter(asset => asset !== quoteAsset)
-        : [...prev, quoteAsset];
-      setAllAssetsSelected(newSelection.length === quoteAssets.length);
-      return newSelection;
-    });
-  };
+        : [...prev, quoteAsset]
+      setAllAssetsSelected(newSelection.length === quoteAssets.length)
+      return newSelection
+    })
+  }
 
   const handleChoosePairs = useCallback((exchange: string) => {
     setCurrentExchange(exchange)
-    setSelectedQuoteAssets([]);
-    setAllAssetsSelected(false);
+    setSelectedQuoteAssets([])
+    setAllAssetsSelected(false)
     setShowModal(true)
-  }, []);
+  }, [])
 
   const handleMarketTypeChange = useCallback((type: 'spot' | 'futures') => {
     setMarketType(type)
@@ -275,23 +273,23 @@ export function CryptoWatchlistDashboard() {
     setQuoteAssets([])
 
     if (type === 'futures' && !hasSelectedFutures) {
-      setShowBackgroundGif(true);
-      setIsShaking(true);
-      setHasSelectedFutures(true);
+      setShowBackgroundGif(true)
+      setIsShaking(true)
+      setHasSelectedFutures(true)
       setTimeout(() => {
-        setShowBackgroundGif(false);
-        setIsShaking(false);
-        setIsExploding(true);
+        setShowBackgroundGif(false)
+        setIsShaking(false)
+        setIsExploding(true)
         setTimeout(() => {
-          setIsExploding(false);
-        }, 500);
-      }, 5000);
+          setIsExploding(false)
+        }, 500)
+      }, 5000)
     }
-  }, [hasSelectedFutures]);
+  }, [hasSelectedFutures])
 
   const handleSyntheticBaseChange = (value: string) => {
-    setSyntheticBase(value as SyntheticPair);
-  };
+    setSyntheticBase(value as SyntheticPair)
+  }
 
   const handleDownload = async () => {
     if (!currentExchange) {
@@ -311,61 +309,61 @@ export function CryptoWatchlistDashboard() {
       const markets = allMarkets
         .filter(market => selectedQuoteAssets.includes(market.quoteAsset))
         .map(market => {
-          const symbol = market.symbol;
+          const symbol = market.symbol
           return exportAsSynthetic
             ? `${symbol}/${syntheticPairs[syntheticBase]}`
-            : symbol;
-        });
+            : symbol
+        })
 
-      const batchSize = 999;
-      const batches = Math.ceil(markets.length / batchSize);
+      const batchSize = 999
+      const batches = Math.ceil(markets.length / batchSize)
 
       for (let i = 0; i < batches; i++) {
-        const start = i * batchSize;
-        const end = Math.min((i + 1) * batchSize, markets.length);
-        const batchMarkets = markets.slice(start, end);
-        const content = batchMarkets.join(',');
-        const blob = new Blob([content], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${currentExchange.toLowerCase()}_${marketType}_markets_batch${i + 1}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        const start = i * batchSize
+        const end = Math.min((i + 1) * batchSize, markets.length)
+        const batchMarkets = markets.slice(start, end)
+        const content = batchMarkets.join(',')
+        const blob = new Blob([content], { type: 'text/plain' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${currentExchange.toLowerCase()}_${marketType}_markets_batch${i + 1}.txt`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
 
         // Add a small delay between downloads to prevent browser throttling
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100))
       }
 
-      setShowModal(false);
-    } catch (error) {
-      console.error('Error downloading markets:', error);
+      setShowModal(false)
+    } catch (error: any) {
+      console.error('Error downloading markets:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
-  const colors = isDarkMode ? colorScheme.dark : colorScheme.light;
-  const exchanges = marketType === 'spot' ? spotExchanges : futuresExchanges;
+  const colors = isDarkMode ? colorScheme.dark : colorScheme.light
+  const exchanges = marketType === 'spot' ? spotExchanges : futuresExchanges
 
   const handleSelectAllAssets = (checked: boolean) => {
-    setAllAssetsSelected(checked);
+    setAllAssetsSelected(checked)
     if (checked) {
-      setSelectedQuoteAssets(quoteAssets);
+      setSelectedQuoteAssets(quoteAssets)
     } else {
-      setSelectedQuoteAssets([]);
+      setSelectedQuoteAssets([])
     }
-  };
+  }
 
   useEffect(() => {
-    console.log('showBackgroundGif:', showBackgroundGif);
-  }, [showBackgroundGif]);
+    console.log('showBackgroundGif:', showBackgroundGif)
+  }, [showBackgroundGif])
 
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
+    setIsDarkMode(!isDarkMode)
+  }
 
   return (
     <div className={`min-h-screen relative overflow-hidden flex flex-col ${colors.bg} transition-colors duration-300`}>
@@ -405,7 +403,7 @@ export function CryptoWatchlistDashboard() {
               )}
             </div>
             <div className="flex items-center space-x-2">
-              <span>Mix N' Match Mode</span>
+              <span>Mix N&apos; Match Mode</span>
               <Switch
                 checked={isMixNMatchMode}
                 onCheckedChange={setIsMixNMatchMode}
@@ -491,7 +489,7 @@ export function CryptoWatchlistDashboard() {
                           <Checkbox 
                             id="select-all" 
                             checked={allAssetsSelected}
-                            onCheckedChange={handleSelectAllAssets}
+                            onCheckedChange={(checked) => handleSelectAllAssets(checked)}
                             className="border-2 border-ftx-teal"
                           />
                         </div>
@@ -535,7 +533,6 @@ export function CryptoWatchlistDashboard() {
                         Total assets selected: {filteredMarketsCount}
                       </p>
                       {filteredMarketsCount > 1000 && (
-                        // eslint-disable-next-line react/no-unescaped-entities
                         <p className="text-sm text-yellow-500 mb-4">
                           Note: More than 1000 assets selected. The download will be split into multiple files.
                         </p>
@@ -571,5 +568,5 @@ export function CryptoWatchlistDashboard() {
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }

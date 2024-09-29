@@ -8,7 +8,7 @@ const PRODUCTS_API_URL = `${PHEMEX_API_BASE_URL}/public/products`;
 /**
  * Fetch and process Phemex products to retrieve Spot or Futures markets
  * @param {string} type - 'Spot' or 'Perpetual'
- * @returns {object} - Object containing markets, assetCounts, and quoteAssets
+ * @returns {Promise<{markets: Array, assetCounts: Object, quoteAssets: Array}>}
  */
 async function fetchMarkets(type) {
     try {
@@ -60,13 +60,13 @@ async function fetchMarkets(type) {
         return { markets, assetCounts, quoteAssets };
     } catch (error) {
         console.error(`Error fetching ${type} markets from Phemex:`, error);
-        throw error; // Re-throw the error to be caught by the caller
+        throw error;
     }
 }
 
 /**
  * Fetch all Spot markets from Phemex
- * @returns {object} - Object containing Spot markets, assetCounts, and quoteAssets
+ * @returns {Promise<{markets: Array, assetCounts: Object, quoteAssets: Array}>}
  */
 async function fetchAllSpotMarkets() {
     console.log('Fetching Phemex spot markets...');
@@ -75,7 +75,7 @@ async function fetchAllSpotMarkets() {
 
 /**
  * Fetch all Futures (Perpetual) markets from Phemex
- * @returns {object} - Object containing Futures markets, assetCounts, and quoteAssets
+ * @returns {Promise<{markets: Array, assetCounts: Object, quoteAssets: Array}>}
  */
 async function fetchAllFuturesMarkets() {
     console.log('Fetching Phemex futures markets...');

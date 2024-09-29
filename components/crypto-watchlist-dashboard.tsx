@@ -28,6 +28,12 @@ import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
 import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
 
+interface FetchResult {
+  markets: { symbol: string; baseAsset: string; quoteAsset: string }[];
+  assetCounts: Record<string, number>;
+  quoteAssets: string[];
+}
+
 const spotExchanges = [
   {
     name: 'Binance',
@@ -233,7 +239,8 @@ export function CryptoWatchlistDashboard() {
   useEffect(() => {
     if (showModal) {
       setLoading(true);
-      let fetchFunction;
+      let fetchFunction: (() => Promise<FetchResult>) | null = null;
+      
       if (currentExchange === 'Binance') {
         fetchFunction = marketType === 'spot' ? fetchBinanceSpotMarkets : fetchBinanceFuturesMarkets;
       } else if (currentExchange === 'Bybit') {
@@ -265,24 +272,20 @@ export function CryptoWatchlistDashboard() {
       }
       
       if (fetchFunction) {
-        fetchFunction().then(({ markets, assetCounts, quoteAssets }) => {
-          setAllMarkets(markets)
-          setAssetCounts(assetCounts)
-          setQuoteAssets(quoteAssets)
-          setLoading(false)
-        }).catch(error => {
-          console.error('Error fetching markets:', error)
-          setLoading(false)
+        fetchFunction().then(({ markets, assetCounts, quoteAssets }: FetchResult) => {
+          setAllMarkets(markets);
+          setAssetCounts(assetCounts);
+          setQuoteAssets(quoteAssets);
+          setLoading(false);
+        }).catch((error: Error) => {
+          console.error('Error fetching markets:', error);
+          setLoading(false);
           // Display error to the user
-          if (error instanceof Error) {
-            alert(`Error fetching markets: ${error.message}`)
-          } else {
-            alert('An unknown error occurred while fetching markets.')
-          }
-        })
+          alert(`Error fetching markets: ${error.message}`);
+        });
       }
     }
-  }, [showModal, marketType, currentExchange])
+  }, [showModal, marketType, currentExchange]);
 
   useEffect(() => {
     const filteredMarkets = allMarkets.filter(market => 

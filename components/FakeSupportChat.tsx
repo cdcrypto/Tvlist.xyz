@@ -35,11 +35,13 @@ const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, o
 
   useEffect(() => {
     if (isOpen) {
+      // Select a random agent when the chat is opened
+      const randomAgent = agents[Math.floor(Math.random() * agents.length)];
+      setCurrentAgent(randomAgent);
+
       const interval = setInterval(() => {
-        const randomAgent = agents[Math.floor(Math.random() * agents.length)];
         const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
         setMessage(randomMessage);
-        setCurrentAgent(randomAgent);
       }, 3000);
 
       return () => clearInterval(interval);

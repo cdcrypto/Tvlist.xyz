@@ -3,7 +3,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Moon, Sun } from 'lucide-react'
-import Image from 'next/image'
 import { Logo } from './Logo'
 
 const Header: React.FC<{ 

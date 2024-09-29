@@ -38,19 +38,16 @@ const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, o
 
   useEffect(() => {
     if (isOpen) {
-      const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
-      setMessage(randomMessage);
-      
-      // Randomly select an agent
-      const randomAgent = agents[Math.floor(Math.random() * agents.length)];
-      setCurrentAgent(randomAgent);
+      const interval = setInterval(() => {
+        const randomAgent = agents[Math.floor(Math.random() * agents.length)];
+        const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+        setMessage(randomMessage);
+        setCurrentAgent(randomAgent);
+      }, 3000);
 
-      const timer = setTimeout(() => {
-        setMessage("Your request is ready. Don't over leverage!");
-      }, 5000);
-      return () => clearTimeout(timer);
+      return () => clearInterval(interval);
     }
-  }, [isOpen]);
+  }, [isOpen, agents, funnyMessages]);
 
   const bgColor = isDarkMode ? 'bg-ftx-dark-blue-light' : 'bg-white';
   const textColor = isDarkMode ? 'text-white' : 'text-ftx-dark-blue';

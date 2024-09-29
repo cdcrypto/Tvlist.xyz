@@ -53,7 +53,6 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedExchanges, setExpandedExchanges] = useState<Set<string>>(new Set());
-  const [retweetRequired, setRetweetRequired] = useState(true); // Set to false to disable the feature
 
   useEffect(() => {
     async function fetchAllMarkets() {
@@ -157,25 +156,7 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
     });
   };
 
-  const handleRetweet = async () => {
-    // This is where you'd implement the actual retweet functionality
-    // For now, we'll simulate it with a timeout
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 2000);
-    });
-  };
-
   const handleDownload = async () => {
-    if (retweetRequired) {
-      const retweeted = await handleRetweet();
-      if (!retweeted) {
-        alert("Please retweet to download the watchlist!");
-        return;
-      }
-    }
-
     const selectedMarkets = Array.from(selectedQuoteAssets).flatMap(key => {
       const [exchange, quoteAsset, type] = key.split('-');
       return groupedMarkets[exchange][type as 'spot' | 'futures'][quoteAsset].map(m => m.symbol);
@@ -311,14 +292,6 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
             return acc + groupedMarkets[exchange][type as 'spot' | 'futures'][quoteAsset].length;
           }, 0)}
         </div>
-        {retweetRequired ? (
-          <Button 
-            onClick={handleRetweet} 
-            className={`${buttonClass} transition-colors duration-300 mr-2`}
-          >
-            Retweet to Unlock Download
-          </Button>
-        ) : null}
         <Button 
           onClick={handleDownload} 
           disabled={selectedQuoteAssets.size === 0}

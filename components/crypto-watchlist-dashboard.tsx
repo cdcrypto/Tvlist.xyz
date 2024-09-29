@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Download, LineChart, Zap, X, Twitter } from 'lucide-react'
+import { Download, LineChart, Zap, X } from 'lucide-react'
 import { fetchAllSpotMarkets as fetchBinanceSpotMarkets, fetchAllFuturesMarkets as fetchBinanceFuturesMarkets } from '@/utils/fetchmarkets'
 import { fetchAllSpotMarkets as fetchBybitSpotMarkets, fetchAllFuturesMarkets as fetchBybitFuturesMarkets } from '@/utils/fetchbybit'
 import { fetchAllSpotMarkets as fetchBitgetSpotMarkets, fetchAllFuturesMarkets as fetchBitgetFuturesMarkets } from '@/utils/fetchbitget'
@@ -194,7 +194,6 @@ export function CryptoWatchlistDashboard() {
   const [isExploding, setIsExploding] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);  // Changed to true
   const [isMixNMatchMode, setIsMixNMatchMode] = useState(false);
-  const [retweetRequired, setRetweetRequired] = useState(true); // Add this line
 
   useEffect(() => {
     if (showModal) {
@@ -294,25 +293,7 @@ export function CryptoWatchlistDashboard() {
     setSyntheticBase(value as SyntheticPair);
   };
 
-  const handleRetweet = async () => {
-    // This is where you'd implement the actual retweet functionality
-    // For now, we'll simulate it with a timeout
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 2000);
-    });
-  };
-
   const handleDownload = async () => {
-    if (retweetRequired) {
-      const retweeted = await handleRetweet();
-      if (!retweeted) {
-        alert("Please retweet to download the watchlist!");
-        return;
-      }
-    }
-
     if (!currentExchange) {
       console.log(`No exchange selected`)
       return
@@ -558,18 +539,10 @@ export function CryptoWatchlistDashboard() {
                           Note: More than 1000 assets selected. The download will be split into multiple files.
                         </p>
                       )}
-                      {retweetRequired && (
-                        <Button
-                          className={`w-full ${colors.button.active} text-white transition-colors duration-300 mb-2`}
-                          onClick={handleRetweet}
-                        >
-                          <Twitter className="mr-2 h-4 w-4" /> Retweet to Unlock Download
-                        </Button>
-                      )}
                       <Button
                         className={`w-full ${colors.button.active} text-white transition-colors duration-300`}
                         onClick={handleDownload}
-                        disabled={loading || selectedQuoteAssets.length === 0 || (retweetRequired && !handleRetweet)}
+                        disabled={loading || selectedQuoteAssets.length === 0}
                       >
                         {loading ? 'Loading...' : (
                           <>

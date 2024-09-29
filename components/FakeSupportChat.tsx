@@ -29,7 +29,6 @@ const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, o
 
   const agents = [
     { name: 'Agent Ellison', image: '/images/ellison.png' },
-    { name: 'Agent Matty', image: '/images/matty.png' },
     { name: 'Agent Sam', image: '/images/sam.png' },
   ];
 

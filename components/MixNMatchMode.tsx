@@ -61,6 +61,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedExchanges, setExpandedExchanges] = useState<Set<string>>(new Set());
   const [showSupportChat, setShowSupportChat] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const [totalSelectedMarkets, setTotalSelectedMarkets] = useState(0);
 
   useEffect(() => {
     async function fetchAllMarkets() {
@@ -160,6 +162,16 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
       } else {
         newSet.add(key);
       }
+      
+      // Calculate total selected markets
+      const newTotalSelectedMarkets = Array.from(newSet).reduce((acc, key) => {
+        const [ex, qa, t] = key.split('-');
+        return acc + groupedMarkets[ex][t as 'spot' | 'futures'][qa].length;
+      }, 0);
+      
+      setTotalSelectedMarkets(newTotalSelectedMarkets);
+      setShowWarning(newTotalSelectedMarkets > 1000);
+      
       return newSet;
     });
   };
@@ -175,19 +187,37 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
     // Delay the download process by 5 seconds
     await new Promise(resolve => setTimeout(resolve, 5000));
     
-    const content = selectedMarkets.join(',');
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'custom_watchlist.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const batchSize = 999;
+    const batches = Math.ceil(selectedMarkets.length / batchSize);
+
+    if (selectedMarkets.length > 1000) {
+      setShowWarning(true);
+    }
+
+    for (let i = 0; i < batches; i++) {
+      const start = i * batchSize;
+      const end = Math.min((i + 1) * batchSize, selectedMarkets.length);
+      const batchMarkets = selectedMarkets.slice(start, end);
+      const content = batchMarkets.join(',');
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `custom_watchlist_batch${i + 1}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      // Add a small delay between downloads to prevent browser throttling
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
     
     // Close the support chat after the download is complete
-    setTimeout(() => setShowSupportChat(false), 2000);
+    setTimeout(() => {
+      setShowSupportChat(false);
+      setShowWarning(false);
+    }, 2000);
   };
 
   const toggleExchangeExpansion = (exchange: string) => {
@@ -304,19 +334,23 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
       </div>
       <div className="mt-4 flex justify-between items-center">
         <div>
-          Selected Markets: {Array.from(selectedQuoteAssets).reduce((acc, key) => {
-            const [exchange, quoteAsset, type] = key.split('-');
-            return acc + groupedMarkets[exchange][type as 'spot' | 'futures'][quoteAsset].length;
-          }, 0)}
+          Selected Markets: {totalSelectedMarkets}
         </div>
-        <Button 
-          onClick={handleDownload} 
-          disabled={selectedQuoteAssets.size === 0}
-          className={`${buttonClass} transition-colors duration-300`}
-        >
-          <Download className="mr-2 h-4 w-4" />
-          Download Watchlist
-        </Button>
+        <div className="flex flex-col items-end">
+          {showWarning && (
+            <p className="text-sm text-yellow-500 mb-2">
+              Note: More than 1000 assets selected. The download will be split into multiple files.
+            </p>
+          )}
+          <Button 
+            onClick={handleDownload} 
+            disabled={selectedQuoteAssets.size === 0}
+            className={`${buttonClass} transition-colors duration-300`}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Download Watchlist
+          </Button>
+        </div>
       </div>
       
       <FakeSupportChat

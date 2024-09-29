@@ -36,7 +36,7 @@ type GroupedMarkets = {
 };
 
 type FetchResult = {
-  markets: Market[];
+  markets: { symbol: string; baseAsset: string; quoteAsset: string }[];
   assetCounts: Record<string, number>;
   quoteAssets: string[];
 };
@@ -108,23 +108,23 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
         ]);
 
         const allMarkets: Market[] = [
-          ...binanceSpot.markets.map((m: Market) => ({ ...m, exchange: 'Binance', type: 'spot' as const })),
-          ...binanceFutures.markets.map((m: Market) => ({ ...m, exchange: 'Binance', type: 'futures' as const })),
-          ...bybitSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bybit', type: 'spot' as const })),
-          ...bybitFutures.markets.map((m: Market) => ({ ...m, exchange: 'Bybit', type: 'futures' as const })),
-          ...bitgetSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bitget', type: 'spot' as const })),
-          ...bitgetFutures.markets.map((m: Market) => ({ ...m, exchange: 'Bitget', type: 'futures' as const })),
-          ...kucoinSpot.markets.map((m: Market) => ({ ...m, exchange: 'KuCoin', type: 'spot' as const })),
-          ...kucoinFutures.markets.map((m: Market) => ({ ...m, exchange: 'KuCoin', type: 'futures' as const })),
-          ...bitfinexSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bitfinex', type: 'spot' as const })),
-          ...dydxMarkets.markets.map((m: Market) => ({ ...m, exchange: 'dYdX', type: 'futures' as const })),
-          ...okxSpot.markets.map((m: Market) => ({ ...m, exchange: 'OKX', type: 'spot' as const })),
-          ...okxFutures.markets.map((m: Market) => ({ ...m, exchange: 'OKX', type: 'futures' as const })),
-          ...mexcSpot.markets.map((m: Market) => ({ ...m, exchange: 'MEXC', type: 'spot' as const })),
-          ...mexcFutures.markets.map((m: Market) => ({ ...m, exchange: 'MEXC', type: 'futures' as const })),
-          ...poloniexSpot.markets.map((m: Market) => ({ ...m, exchange: 'Poloniex', type: 'spot' as const })),
-          ...krakenSpot.markets.map((m: Market) => ({ ...m, exchange: 'Kraken', type: 'spot' as const })),
-          ...cryptocomSpot.markets.map((m: Market) => ({ ...m, exchange: 'Crypto.com', type: 'spot' as const }))
+          ...binanceSpot.markets.map(m => ({ ...m, exchange: 'Binance', type: 'spot' as const })),
+          ...binanceFutures.markets.map(m => ({ ...m, exchange: 'Binance', type: 'futures' as const })),
+          ...bybitSpot.markets.map(m => ({ ...m, exchange: 'Bybit', type: 'spot' as const })),
+          ...bybitFutures.markets.map(m => ({ ...m, exchange: 'Bybit', type: 'futures' as const })),
+          ...bitgetSpot.markets.map(m => ({ ...m, exchange: 'Bitget', type: 'spot' as const })),
+          ...bitgetFutures.markets.map(m => ({ ...m, exchange: 'Bitget', type: 'futures' as const })),
+          ...kucoinSpot.markets.map(m => ({ ...m, exchange: 'KuCoin', type: 'spot' as const })),
+          ...kucoinFutures.markets.map(m => ({ ...m, exchange: 'KuCoin', type: 'futures' as const })),
+          ...bitfinexSpot.markets.map(m => ({ ...m, exchange: 'Bitfinex', type: 'spot' as const })),
+          ...dydxMarkets.markets.map(m => ({ ...m, exchange: 'dYdX', type: 'futures' as const })),
+          ...okxSpot.markets.map(m => ({ ...m, exchange: 'OKX', type: 'spot' as const })),
+          ...okxFutures.markets.map(m => ({ ...m, exchange: 'OKX', type: 'futures' as const })),
+          ...mexcSpot.markets.map(m => ({ ...m, exchange: 'MEXC', type: 'spot' as const })),
+          ...mexcFutures.markets.map(m => ({ ...m, exchange: 'MEXC', type: 'futures' as const })),
+          ...poloniexSpot.markets.map(m => ({ ...m, exchange: 'Poloniex', type: 'spot' as const })),
+          ...krakenSpot.markets.map(m => ({ ...m, exchange: 'Kraken', type: 'spot' as const })),
+          ...cryptocomSpot.markets.map(m => ({ ...m, exchange: 'Crypto.com', type: 'spot' as const }))
         ];
 
         const grouped = allMarkets.reduce((acc, market) => {

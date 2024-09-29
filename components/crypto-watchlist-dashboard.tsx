@@ -130,8 +130,6 @@ const colorScheme = {
   }
 };
 
-type ColorScheme = typeof colorScheme.light | typeof colorScheme.dark;
-
 type SyntheticPair = 'BTC' | 'ETH' | 'BNB' | 'SOL';
 
 const ExchangeCard = React.memo(({ exchange, colors, isShaking, isUnclickable, handleChoosePairs }: {

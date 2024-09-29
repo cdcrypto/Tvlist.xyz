@@ -131,7 +131,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           ...mexcFutures.markets.map(m => ({ ...m, exchange: 'MEXC', type: 'futures' as const })),
           ...poloniexSpot.markets.map(m => ({ ...m, exchange: 'Poloniex', type: 'spot' as const })),
           ...krakenSpot.markets.map(m => ({ ...m, exchange: 'Kraken', type: 'spot' as const })),
-          ...cryptocomSpot.markets.map(m => ({ ...m, exchange: 'Crypto.com', type: 'spot' as const }))
+          ...cryptocomSpot.markets.map(m => ({ ...m, exchange: 'Crypto.com', type: 'spot' as const })),
+          ...coinbaseSpot.markets.map(m => ({ ...m, exchange: 'Coinbase', type: 'spot' as const }))
         ];
 
         const grouped = allMarkets.reduce((acc, market) => {

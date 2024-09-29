@@ -2,7 +2,7 @@
 // Otherwise, uncomment the following line after installing node-fetch@2
 // const fetch = require('node-fetch');
 
-const COINBASE_PUBLIC_API_URL = 'https://api.exchange.coinbase.com/products';
+const COINBASE_PUBLIC_API_URL = '/api/coinbase?url=https://api.exchange.coinbase.com/products';
 
 async function fetchMarkets(url) {
     try {

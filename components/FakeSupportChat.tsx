@@ -45,7 +45,7 @@ const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, o
 
       return () => clearInterval(interval);
     }
-  }, [isOpen]);
+  }, [isOpen, agents, funnyMessages]);
 
   const bgColor = isDarkMode ? 'bg-ftx-dark-blue-light' : 'bg-white';
   const textColor = isDarkMode ? 'text-white' : 'text-ftx-dark-blue';

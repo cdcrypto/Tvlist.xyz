@@ -102,3 +102,31 @@ body {
 .border-neon-green {
   border-color: #39FF14;
 }
+
+.bg-gradient-crypto {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+
+.text-gradient-crypto {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, #3b82f6, #8b5cf6);
+}
+
+/* Add these styles if not already present */
+.text-gradient-crypto {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, #3b82f6, #8b5cf6);
+}
+
+/* You may also want to add these utility classes for better dark mode support */
+.dark .dark:text-white {
+  color: white;
+}
+
+.dark .dark:bg-gray-800 {
+  background-color: #1f2937;
+}

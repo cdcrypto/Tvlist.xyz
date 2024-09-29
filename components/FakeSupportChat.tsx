@@ -12,7 +12,7 @@ interface FakeSupportChatProps {
 const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, onClose }) => {
   const [message, setMessage] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
-  const [currentAgent, setCurrentAgent] = useState({ name: '', image: '/images/ellison.png' });
+  const [currentAgent, setCurrentAgent] = useState({ name: '', image: '' });
 
   const funnyMessages = [
     "Hodling your request... can i suck you in the meantime?! 🚀",
@@ -45,7 +45,7 @@ const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, o
 
       return () => clearInterval(interval);
     }
-  }, [isOpen, agents, funnyMessages]);
+  }, [isOpen]);
 
   const bgColor = isDarkMode ? 'bg-ftx-dark-blue-light' : 'bg-white';
   const textColor = isDarkMode ? 'text-white' : 'text-ftx-dark-blue';

@@ -118,8 +118,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           fetchWithRetry(() => fetchCryptocomSpotMarkets()),
           fetchWithRetry(() => fetchCoinbaseMarkets()),
           fetchWithRetry(() => fetchAllGateSpotMarkets()),
-          fetchWithRetry(() => fetchPhemexSpotMarkets()),
-          fetchWithRetry(() => fetchPhemexFuturesMarkets())
+          fetchWithRetry(() => fetchPhemexSpotMarkets() as Promise<FetchResult>),
+          fetchWithRetry(() => fetchPhemexFuturesMarkets() as Promise<FetchResult>)
         ]);
 
         const allMarkets: Market[] = [

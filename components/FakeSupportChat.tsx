@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MessageCircle, Minimize2 } from 'lucide-react';
 import Image from 'next/image';
-import ellisonImage from './ellison.png'; // Import the local image
+import ellisonImage from './ellison.png';
+import mattyImage from './matty.png';
+import samImage from './sam.png';
 
 interface FakeSupportChatProps {
   isDarkMode: boolean;
@@ -13,6 +15,7 @@ interface FakeSupportChatProps {
 const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, onClose }) => {
   const [message, setMessage] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
+  const [currentAgent, setCurrentAgent] = useState({ name: '', image: ellisonImage });
 
   const funnyMessages = [
     "Hodling your request... can i suck you in the meantime?! 🚀",
@@ -27,12 +30,23 @@ const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, o
     "Checking if your request can be fullfilled... dont panic."
   ];
 
+  const agents = [
+    { name: 'Agent Ellison', image: ellisonImage },
+    { name: 'Agent Matty', image: mattyImage },
+    { name: 'Agent Sam', image: samImage },
+  ];
+
   useEffect(() => {
     if (isOpen) {
       const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
       setMessage(randomMessage);
+      
+      // Randomly select an agent
+      const randomAgent = agents[Math.floor(Math.random() * agents.length)];
+      setCurrentAgent(randomAgent);
+
       const timer = setTimeout(() => {
-        setMessage("Your request is ready. Dont over leverage!");
+        setMessage("Your request is ready. Don't over leverage!");
       }, 5000);
       return () => clearTimeout(timer);
     }
@@ -74,7 +88,7 @@ const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, o
               <div className="p-4 flex flex-col items-center flex-grow overflow-y-auto">
                 <div className="mb-4 flex-shrink-0">
                   <Image
-                    src={ellisonImage}
+                    src={currentAgent.image}
                     alt="Customer Support Agent"
                     width={250}
                     height={250}
@@ -82,7 +96,7 @@ const FakeSupportChat: React.FC<FakeSupportChatProps> = ({ isDarkMode, isOpen, o
                   />
                 </div>
                 <div className="text-center">
-                  <p className="text-xl font-semibold mb-2">Agent Ellison</p>
+                  <p className="text-xl font-semibold mb-2">{currentAgent.name}</p>
                   <p className="text-lg">{message}</p>
                 </div>
               </div>

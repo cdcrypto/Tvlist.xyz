@@ -423,7 +423,7 @@ export function CryptoWatchlistDashboard() {
       <Header 
         isDarkMode={isDarkMode} 
         toggleDarkMode={toggleDarkMode} 
-        resetToHome={resetToHome}  // Pass the new function here
+        resetToHome={resetToHome}
       />
       <div className="flex-grow">
         {backgroundGifLoaded && (
@@ -453,11 +453,10 @@ export function CryptoWatchlistDashboard() {
         )}
         <div className={`p-8 relative z-10 min-h-full ${colors.text}`}>
           <div className="max-w-6xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
-              <div className="w-1/3"></div> {/* Spacer */}
-              <div className="flex justify-center w-1/3">
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
+              <div className="w-full sm:w-auto order-2 sm:order-1">
                 {!isMixNMatchMode && (
-                  <div className="flex space-x-4">
+                  <div className="flex justify-center sm:justify-start space-x-4">
                     <Button
                       variant="default"
                       onClick={() => handleMarketTypeChange('spot')}
@@ -475,7 +474,7 @@ export function CryptoWatchlistDashboard() {
                   </div>
                 )}
               </div>
-              <div className="flex items-center space-x-2 w-1/3 justify-end">
+              <div className="flex items-center space-x-2 w-full sm:w-auto order-1 sm:order-2 justify-center sm:justify-end">
                 <span>Mix N&apos; Match Mode</span>
                 <Switch
                   checked={isMixNMatchMode}

@@ -213,7 +213,7 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
 
   return (
     <div className={`p-4 ${themeClass}`}>
-      <h1 className="text-2xl font-bold mb-4">Mix N' Match Mode</h1>
+      <h1 className="text-2xl font-bold mb-4">Mix N&apos; Match Mode</h1>
       <div className="mb-4 flex items-center">
         <Search className="mr-2" />
         <input

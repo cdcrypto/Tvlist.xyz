@@ -24,6 +24,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Header from './Header'  // Change this line
 import { MixNMatchMode } from './MixNMatchMode'
 import FakeSupportChat from './FakeSupportChat'
+import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 
 const spotExchanges = [
   {
@@ -65,6 +66,10 @@ const spotExchanges = [
   {
     name: 'Crypto.com',
     logo: 'https://assets.coingecko.com/markets/images/589/small/Crypto.jpg?1639719470',
+  },
+  {
+    name: 'Coinbase',
+    logo: 'https://assets.coingecko.com/markets/images/23/large/Coinbase_Coin_Primary.png?1706864258',
   },
 ]
 
@@ -236,6 +241,8 @@ export function CryptoWatchlistDashboard() {
         fetchFunction = fetchAllKrakenSpotMarkets;
       } else if (currentExchange === 'Crypto.com' && marketType === 'spot') {
         fetchFunction = fetchCryptocomSpotMarkets;
+      } else if (currentExchange === 'Coinbase' && marketType === 'spot') {
+        fetchFunction = fetchCoinbaseMarkets;
       }
       
       if (fetchFunction) {

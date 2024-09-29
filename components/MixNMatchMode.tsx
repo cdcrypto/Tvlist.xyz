@@ -10,6 +10,7 @@ import { fetchAllSpotMarkets as fetchMexcSpotMarkets, fetchAllFuturesMarkets as 
 import { fetchAllSpotMarkets as fetchPoloniexSpotMarkets } from '@/utils/fetchpoloniex';
 import { fetchAllKrakenSpotMarkets } from '@/utils/fetchkraken';
 import { fetchAllSpotMarkets as fetchCryptocomSpotMarkets } from '@/utils/fetchcryptocom';
+import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { useMixNMatchContext } from '@/contexts/MixNMatchContext';
 
 import { Button } from "@/components/ui/button";
@@ -90,7 +91,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           mexcFutures,
           poloniexSpot,
           krakenSpot,
-          cryptocomSpot
+          cryptocomSpot,
+          coinbaseSpot
         ] = await Promise.all([
           fetchWithRetry(() => fetchBinanceSpotMarkets()),
           fetchWithRetry(() => fetchBinanceFuturesMarkets()),
@@ -108,7 +110,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           fetchWithRetry(() => fetchMexcFuturesMarkets()),
           fetchWithRetry(() => fetchPoloniexSpotMarkets()),
           fetchWithRetry(() => fetchAllKrakenSpotMarkets()),
-          fetchWithRetry(() => fetchCryptocomSpotMarkets())
+          fetchWithRetry(() => fetchCryptocomSpotMarkets()),
+          fetchWithRetry(() => fetchCoinbaseMarkets())
         ]);
 
         const allMarkets: Market[] = [

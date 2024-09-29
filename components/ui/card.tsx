@@ -1,20 +1,26 @@
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-xl border bg-card text-card-foreground shadow",
-      className
-    )}
-    {...props}
-  />
-))
+  React.HTMLAttributes<HTMLDivElement> & { isShaking?: boolean; isUnclickable?: boolean }
+>(({ className, isShaking, isUnclickable, ...props }, ref) => {
+  const shakeAnimation = isShaking ? 'animate-shake' : '';
+  const unclickableStyle = isUnclickable ? 'pointer-events-none' : '';
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "rounded-xl border bg-card text-card-foreground shadow",
+        shakeAnimation,
+        unclickableStyle,
+        className
+      )}
+      {...props}
+    />
+  )
+})
 Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<

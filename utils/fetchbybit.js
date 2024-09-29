@@ -36,7 +36,7 @@ async function fetchMarkets(url, isSpot) {
         return { markets, assetCounts, quoteAssets };
     } catch (error) {
         console.error(`Error fetching ${isSpot ? 'spot' : 'futures'} markets:`, error);
-        throw error; // Re-throw the error to be handled by the caller
+        throw error;
     }
 }
 

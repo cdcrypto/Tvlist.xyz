@@ -110,6 +110,8 @@ const futuresColors = {
   text: "text-purple-800",
 };
 
+type SyntheticPair = 'BTC' | 'ETH' | 'BNB' | 'SOL';
+
 export function CryptoWatchlistDashboard() {
   const [marketType, setMarketType] = useState('spot')
   const [loading, setLoading] = useState(false)
@@ -121,7 +123,7 @@ export function CryptoWatchlistDashboard() {
   const [quoteAssets, setQuoteAssets] = useState<string[]>([])
   const [filteredMarketsCount, setFilteredMarketsCount] = useState(0)
   const [exportAsSynthetic, setExportAsSynthetic] = useState(false)
-  const [syntheticBase, setSyntheticBase] = useState('BTC')
+  const [syntheticBase, setSyntheticBase] = useState<SyntheticPair>('BTC')
 
   useEffect(() => {
     if (showModal) {
@@ -203,7 +205,7 @@ export function CryptoWatchlistDashboard() {
 
     setLoading(true)
     try {
-      const syntheticPairs = {
+      const syntheticPairs: Record<SyntheticPair, string> = {
         BTC: 'BINANCE:BTCUSDT',
         ETH: 'BINANCE:ETHUSDT',
         BNB: 'BINANCE:BNBUSDT',

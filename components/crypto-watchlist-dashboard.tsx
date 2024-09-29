@@ -124,10 +124,13 @@ const colorScheme = {
     modal: "bg-ftx-dark-blue-light",
     modalText: "text-white",
     checkbox: "bg-ftx-dark-gray",
+    checkboxText: "text-white",
     logoBorder: "bg-ftx-dark-blue-light border border-ftx-teal",
     toggle: "bg-ftx-dark-blue-light",
   }
 };
+
+type ColorScheme = typeof colorScheme.light | typeof colorScheme.dark;
 
 type SyntheticPair = 'BTC' | 'ETH' | 'BNB' | 'SOL';
 

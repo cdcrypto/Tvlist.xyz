@@ -12,19 +12,23 @@ export default async function handler(req, res) {
   console.log('Fetching URL:', url);
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0', // Add a User-Agent header
+        'Accept': 'application/json',
+      },
+    });
     
     console.log('Response status:', response.status);
-    console.log('Response headers:', response.headers);
+    console.log('Response headers:', response.headers.raw());
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     
-    const text = await response.text();
-    console.log('Response text:', text);
+    const data = await response.json();
+    console.log('Response data:', data);
 
-    const data = JSON.parse(text);
     res.status(200).json(data);
   } catch (error) {
     console.error('Error fetching data from Bybit:', error);

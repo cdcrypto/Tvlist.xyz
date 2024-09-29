@@ -28,10 +28,18 @@ async function fetchMarkets(url, isSpot) {
                 }
             })
             .map(symbol => {
+                let formattedSymbol;
+                if (isSpot) {
+                    // Remove the '/' for spot markets
+                    formattedSymbol = `KUCOIN:${symbol.symbol.replace('-', '')}`;
+                } else {
+                    // Remove the 'M' from futures markets
+                    formattedSymbol = `KUCOIN:${symbol.symbol.replace('M', '')}.P`;
+                }
                 return {
-                    symbol: `KUCOIN:${symbol.symbol.replace('-', '/')}${isSpot ? '' : '.P'}`,
-                    baseAsset: symbol.baseCurrency,
-                    quoteAsset: symbol.quoteCurrency
+                    symbol: formattedSymbol,
+                    baseAsset: symbol.baseCurrency || symbol.baseCoin,
+                    quoteAsset: symbol.quoteCurrency || symbol.quoteCoin
                 };
             });
 

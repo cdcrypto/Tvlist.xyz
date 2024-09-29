@@ -12,6 +12,7 @@ import { fetchAllKrakenSpotMarkets } from '@/utils/fetchkraken';
 import { fetchAllSpotMarkets as fetchCryptocomSpotMarkets } from '@/utils/fetchcryptocom';
 import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { useMixNMatchContext } from '@/contexts/MixNMatchContext';
+import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -92,7 +93,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           poloniexSpot,
           krakenSpot,
           cryptocomSpot,
-          coinbaseSpot
+          coinbaseSpot,
+          gateSpot,
         ] = await Promise.all([
           fetchWithRetry(() => fetchBinanceSpotMarkets()),
           fetchWithRetry(() => fetchBinanceFuturesMarkets()),
@@ -111,7 +113,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           fetchWithRetry(() => fetchPoloniexSpotMarkets()),
           fetchWithRetry(() => fetchAllKrakenSpotMarkets()),
           fetchWithRetry(() => fetchCryptocomSpotMarkets()),
-          fetchWithRetry(() => fetchCoinbaseMarkets())
+          fetchWithRetry(() => fetchCoinbaseMarkets()),
+          fetchWithRetry(() => fetchAllGateSpotMarkets()),
         ]);
 
         const allMarkets: Market[] = [
@@ -132,7 +135,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           ...poloniexSpot.markets.map(m => ({ ...m, exchange: 'Poloniex', type: 'spot' as const })),
           ...krakenSpot.markets.map(m => ({ ...m, exchange: 'Kraken', type: 'spot' as const })),
           ...cryptocomSpot.markets.map(m => ({ ...m, exchange: 'Crypto.com', type: 'spot' as const })),
-          ...coinbaseSpot.markets.map(m => ({ ...m, exchange: 'Coinbase', type: 'spot' as const }))
+          ...coinbaseSpot.markets.map(m => ({ ...m, exchange: 'Coinbase', type: 'spot' as const })),
+          ...gateSpot.markets.map(m => ({ ...m, exchange: 'Gate.io', type: 'spot' as const })),
         ];
 
         const grouped = allMarkets.reduce((acc, market) => {

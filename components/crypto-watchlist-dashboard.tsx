@@ -25,6 +25,7 @@ import Header from './Header'  // Change this line
 import { MixNMatchMode } from './MixNMatchMode'
 import FakeSupportChat from './FakeSupportChat'
 import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
+import { fetchAllGateSpotMarkets, fetchAllGateFuturesMarkets } from '@/utils/fetchgate';
 
 const spotExchanges = [
   {
@@ -71,6 +72,10 @@ const spotExchanges = [
     name: 'Coinbase',
     logo: 'https://assets.coingecko.com/markets/images/23/large/Coinbase_Coin_Primary.png?1706864258',
   },
+  {
+    name: 'Gate.io',
+    logo: 'https://assets.coingecko.com/markets/images/60/large/gate_io_logo1.jpg?1706864280',
+  },
 ]
 
 const futuresExchanges = [
@@ -102,6 +107,7 @@ const futuresExchanges = [
     name: 'MEXC',
     logo: 'https://assets.coingecko.com/markets/images/409/large/MEXC_logo_square.jpeg?1706864416',
   },
+  // Gate.io removed from futures exchanges
 ]
 
 const colorScheme = {
@@ -243,6 +249,8 @@ export function CryptoWatchlistDashboard() {
         fetchFunction = fetchCryptocomSpotMarkets;
       } else if (currentExchange === 'Coinbase' && marketType === 'spot') {
         fetchFunction = fetchCoinbaseMarkets;
+      } else if (currentExchange === 'Gate.io' && marketType === 'spot') {
+        fetchFunction = fetchAllGateSpotMarkets;
       }
       
       if (fetchFunction) {

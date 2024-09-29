@@ -60,7 +60,7 @@ async function fetchMarkets(type) {
         return { markets, assetCounts, quoteAssets };
     } catch (error) {
         console.error(`Error fetching ${type} markets from Phemex:`, error);
-        return { markets: [], assetCounts: {}, quoteAssets: [] };
+        throw error; // Re-throw the error to be caught by the caller
     }
 }
 
@@ -70,9 +70,7 @@ async function fetchMarkets(type) {
  */
 async function fetchAllSpotMarkets() {
     console.log('Fetching Phemex spot markets...');
-    const result = await fetchMarkets('Spot');
-    console.log('Phemex spot markets fetched:', result.markets.length);
-    return result;
+    return fetchMarkets('Spot');
 }
 
 /**
@@ -81,9 +79,7 @@ async function fetchAllSpotMarkets() {
  */
 async function fetchAllFuturesMarkets() {
     console.log('Fetching Phemex futures markets...');
-    const result = await fetchMarkets('Perpetual');
-    console.log('Phemex futures markets fetched:', result.markets.length);
-    return result;
+    return fetchMarkets('Perpetual');
 }
 
 module.exports = {

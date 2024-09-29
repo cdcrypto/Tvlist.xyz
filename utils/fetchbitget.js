@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 const SPOT_API_URL = 'https://api.bitget.com/api/v2/spot/public/symbols';
 const FUTURES_API_URL = 'https://api.bitget.com/api/v2/mix/market/tickers?productType=USDT-FUTURES';
 

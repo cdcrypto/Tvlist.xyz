@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 const SPOT_API_URL = '/api/cryptocom?url=https://api.crypto.com/exchange/v1/public/get-tickers';
 
 async function fetchMarkets(url) {

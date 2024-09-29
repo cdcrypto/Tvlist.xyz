@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 const SPOT_API_URL = '/api/bitfinex?url=https://api.bitfinex.com/v1/symbols_details';
 const FUTURES_API_URL = '/api/bitfinex?url=https://api-pub.bitfinex.com/v2/conf/pub:info:pair:futures';
 

@@ -1,7 +1,5 @@
-const fetch = require('node-fetch');
-
-const SPOT_API_URL = 'https://api.bybit.com/v5/market/instruments-info?category=spot';
-const FUTURES_API_URL = 'https://api.bybit.com/v2/public/symbols';
+const SPOT_API_URL = '/api/bybit?url=https://api.bybit.com/v5/market/instruments-info?category=spot';
+const FUTURES_API_URL = '/api/bybit?url=https://api.bybit.com/v2/public/symbols';
 
 async function fetchMarkets(url, isSpot) {
     try {

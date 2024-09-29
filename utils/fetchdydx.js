@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-const API_URL = 'https://api.dydx.exchange/v3/markets';
+const API_URL = '/api/dydx?url=https://api.dydx.exchange/v3/markets';
 
 async function fetchMarkets() {
     try {

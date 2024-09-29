@@ -108,8 +108,10 @@ const colorScheme = {
     text: "text-ftx-dark-blue",
     modal: "bg-white",
     modalText: "text-ftx-dark-blue",
-    checkbox: "bg-ftx-light-gray",
+    checkbox: "bg-white border border-ftx-teal",
+    checkboxText: "text-ftx-dark-blue",
     logoBorder: "bg-ftx-light-gray border border-ftx-teal",
+    toggle: "bg-ftx-teal",
   },
   dark: {
     bg: "bg-ftx-dark-blue",
@@ -123,6 +125,7 @@ const colorScheme = {
     modalText: "text-white",
     checkbox: "bg-ftx-dark-gray",
     logoBorder: "bg-ftx-dark-blue-light border border-ftx-teal",
+    toggle: "bg-ftx-dark-blue-light",
   }
 };
 
@@ -462,15 +465,17 @@ export function CryptoWatchlistDashboard() {
                         id="synthetic-pair"
                         checked={exportAsSynthetic}
                         onCheckedChange={setExportAsSynthetic}
+                        className={colors.toggle}
                       />
-                      <Label htmlFor="synthetic-pair">Export as Synthetic pair</Label>
+                      <Label htmlFor="synthetic-pair" className={colors.checkboxText}>Export as Synthetic pair</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Label htmlFor="select-all">Select All</Label>
+                      <Label htmlFor="select-all" className={colors.checkboxText}>Select All</Label>
                       <Checkbox 
                         id="select-all" 
                         checked={allAssetsSelected}
                         onCheckedChange={handleSelectAllAssets}
+                        className="border-2 border-ftx-teal"
                       />
                     </div>
                   </div>
@@ -499,8 +504,9 @@ export function CryptoWatchlistDashboard() {
                             id={asset} 
                             checked={selectedQuoteAssets.includes(asset)}
                             onCheckedChange={() => handleQuoteAssetChange(asset)}
+                            className="border-2 border-ftx-teal"
                           />
-                          <Label htmlFor={asset} className={`flex-grow ${colors.modalText}`}>
+                          <Label htmlFor={asset} className={`flex-grow ${colors.checkboxText}`}>
                             {asset}
                             <span className="text-xs text-gray-500 ml-1">({assetCounts[asset] || 0})</span>
                           </Label>

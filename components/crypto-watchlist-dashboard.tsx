@@ -186,11 +186,17 @@ export function CryptoWatchlistDashboard() {
   const [syntheticBase, setSyntheticBase] = useState<SyntheticPair>('BTC')
   const [allAssetsSelected, setAllAssetsSelected] = useState(false);
   const [showBackgroundGif, setShowBackgroundGif] = useState(false);
-  const [isShaking, setIsShaking] = useState(false);
   const [hasSelectedFutures, setHasSelectedFutures] = useState(false);
   const [isExploding, setIsExploding] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);  // Changed to true
   const [isMixNMatchMode, setIsMixNMatchMode] = useState(false);
+  const [backgroundGifLoaded, setBackgroundGifLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new window.Image();
+    img.onload = () => setBackgroundGifLoaded(true);
+    img.src = "https://s11.gifyu.com/images/SAtDO.gif";
+  }, []);
 
   useEffect(() => {
     if (showModal) {
@@ -230,7 +236,11 @@ export function CryptoWatchlistDashboard() {
           console.error('Error fetching markets:', error)
           setLoading(false)
           // Display error to the user
-          alert(`Error fetching markets: ${error.message}`)
+          if (error instanceof Error) {
+            alert(`Error fetching markets: ${error.message}`)
+          } else {
+            alert('An unknown error occurred while fetching markets.')
+          }
         })
       }
     }
@@ -273,11 +283,9 @@ export function CryptoWatchlistDashboard() {
 
     if (type === 'futures' && !hasSelectedFutures) {
       setShowBackgroundGif(true)
-      setIsShaking(true)
       setHasSelectedFutures(true)
       setTimeout(() => {
         setShowBackgroundGif(false)
-        setIsShaking(false)
         setIsExploding(true)
         setTimeout(() => {
           setIsExploding(false)
@@ -342,7 +350,7 @@ export function CryptoWatchlistDashboard() {
       if (error instanceof Error) {
         alert(`Error downloading markets: ${error.message}`)
       } else {
-        alert('An unknown error occurred while downloading markets')
+        alert('An unknown error occurred while downloading markets.')
       }
     } finally {
       setLoading(false)
@@ -374,8 +382,10 @@ export function CryptoWatchlistDashboard() {
     <div className={`min-h-screen relative overflow-hidden flex flex-col ${colors.bg} transition-colors duration-300`}>
       <Header isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
       <div className="flex-grow">
-        {showBackgroundGif && (
-          <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+        {backgroundGifLoaded && (
+          <div 
+            className={`fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-500 ${showBackgroundGif ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          >
             <Image
               src="https://s11.gifyu.com/images/SAtDO.gif"
               alt="Leverage background"

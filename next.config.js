@@ -5,15 +5,15 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'assets.coingecko.com',
-        port: '',
-        pathname: '/markets/images/**',
+        hostname: 's11.gifyu.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 's1.gifyu.com',
       },
       {
         protocol: 'https',
         hostname: 'assets.coingecko.com',
-        port: '',
-        pathname: '/coins/images/**',
       },
     ],
   },

@@ -462,6 +462,7 @@ export function CryptoWatchlistDashboard() {
               className="w-full h-full object-cover opacity-50"
               width={1920}
               height={1080}
+              unoptimized
             />
           </div>
         )}
@@ -477,6 +478,7 @@ export function CryptoWatchlistDashboard() {
                 style={{ transformOrigin: 'center center' }}
                 width={1920}
                 height={1080}
+                unoptimized
               />
             </div>
           </div>

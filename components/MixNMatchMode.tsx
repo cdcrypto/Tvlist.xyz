@@ -15,6 +15,7 @@ import { useMixNMatchContext } from '@/contexts/MixNMatchContext';
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Download, Search, ChevronDown, ChevronRight } from 'lucide-react';
+import FakeSupportChat from './FakeSupportChat';
 
 type Market = {
   symbol: string;
@@ -59,6 +60,7 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedExchanges, setExpandedExchanges] = useState<Set<string>>(new Set());
+  const [showSupportChat, setShowSupportChat] = useState(false);
 
   useEffect(() => {
     async function fetchAllMarkets() {
@@ -167,6 +169,12 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
       const [exchange, quoteAsset, type] = key.split('-');
       return groupedMarkets[exchange][type as 'spot' | 'futures'][quoteAsset].map(m => m.symbol);
     });
+    
+    setShowSupportChat(true);
+    
+    // Delay the download process by 5 seconds
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    
     const content = selectedMarkets.join(',');
     const blob = new Blob([content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -177,6 +185,9 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    
+    // Close the support chat after the download is complete
+    setTimeout(() => setShowSupportChat(false), 2000);
   };
 
   const toggleExchangeExpansion = (exchange: string) => {
@@ -307,6 +318,12 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           Download Watchlist
         </Button>
       </div>
+      
+      <FakeSupportChat
+        isDarkMode={isDarkMode}
+        isOpen={showSupportChat}
+        onClose={() => setShowSupportChat(false)}
+      />
     </div>
   );
 }

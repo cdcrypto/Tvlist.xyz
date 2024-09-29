@@ -130,3 +130,35 @@ body {
 .dark .dark:bg-gray-800 {
   background-color: #1f2937;
 }
+
+@keyframes pixelate {
+  0% { filter: blur(0px); }
+  25% { filter: blur(1px); }
+  50% { filter: blur(2px); }
+  75% { filter: blur(1px); }
+  100% { filter: blur(0px); }
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.pixelated-container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: pixelate 0.5s infinite, wave 3s ease-in-out infinite;
+}

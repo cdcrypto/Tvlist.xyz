@@ -23,6 +23,7 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Header from './Header'  // Change this line
 import { MixNMatchMode } from './MixNMatchMode'
+import FakeSupportChat from './FakeSupportChat'
 
 const spotExchanges = [
   {
@@ -193,11 +194,20 @@ export function CryptoWatchlistDashboard() {
   const [isMixNMatchMode, setIsMixNMatchMode] = useState(false);
   const [backgroundGifLoaded, setBackgroundGifLoaded] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
+  const [showMixNMatchGif, setShowMixNMatchGif] = useState(false);
+  const [mixNMatchGifLoaded, setMixNMatchGifLoaded] = useState(false);
+  const [isPixelated, setIsPixelated] = useState(false);
+  const [hasMixNMatchBeenActivated, setHasMixNMatchBeenActivated] = useState(false);
+  const [showSupportChat, setShowSupportChat] = useState(false);
 
   useEffect(() => {
-    const img = new window.Image();
-    img.onload = () => setBackgroundGifLoaded(true);
-    img.src = "https://s11.gifyu.com/images/SAtDO.gif";
+    const futuresGif = new window.Image();
+    futuresGif.onload = () => setBackgroundGifLoaded(true);
+    futuresGif.src = "https://s11.gifyu.com/images/SAtDO.gif";
+
+    const mixNMatchGif = new window.Image();
+    mixNMatchGif.onload = () => setMixNMatchGifLoaded(true);
+    mixNMatchGif.src = "https://s1.gifyu.com/images/SA5EY.gif";
   }, []);
 
   useEffect(() => {
@@ -309,6 +319,11 @@ export function CryptoWatchlistDashboard() {
     }
 
     setLoading(true)
+    setShowSupportChat(true)
+
+    // Delay the download process by 5 seconds
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
     try {
       const syntheticPairs: Record<SyntheticPair, string> = {
         BTC: 'BINANCE:BTCUSDT',
@@ -358,6 +373,8 @@ export function CryptoWatchlistDashboard() {
       }
     } finally {
       setLoading(false)
+      // Close the support chat after the download is complete
+      setTimeout(() => setShowSupportChat(false), 2000)
     }
   }
 
@@ -388,8 +405,21 @@ export function CryptoWatchlistDashboard() {
     // Add any other state resets you want to perform
   }, []);
 
+  const handleMixNMatchModeChange = (checked: boolean) => {
+    setIsMixNMatchMode(checked);
+    if (checked && !hasMixNMatchBeenActivated) {
+      setShowMixNMatchGif(true);
+      setIsPixelated(true);
+      setHasMixNMatchBeenActivated(true);
+      setTimeout(() => {
+        setShowMixNMatchGif(false);
+        setIsPixelated(false);
+      }, 5000); // Show the GIF and pixelation effect for 5 seconds
+    }
+  };
+
   return (
-    <div className={`min-h-screen relative overflow-hidden flex flex-col ${colors.bg} transition-colors duration-300`}>
+    <div className={`min-h-screen relative overflow-hidden flex flex-col ${colors.bg} transition-colors duration-300 ${isPixelated ? 'pixelated-container' : ''}`}>
       <Header 
         isDarkMode={isDarkMode} 
         toggleDarkMode={toggleDarkMode} 
@@ -400,13 +430,25 @@ export function CryptoWatchlistDashboard() {
           <div 
             className={`fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-500 ${showBackgroundGif ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           >
-            <Image
+            <img
               src="https://s11.gifyu.com/images/SAtDO.gif"
               alt="Leverage background"
-              layout="fill"
-              objectFit="cover"
-              className="opacity-50"
+              className="w-full h-full object-cover opacity-50"
             />
+          </div>
+        )}
+        {mixNMatchGifLoaded && (
+          <div 
+            className={`fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-500 ${showMixNMatchGif ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          >
+            <div className="w-full h-full overflow-hidden">
+              <img
+                src="https://s1.gifyu.com/images/SA5EY.gif"
+                alt="Mix N' Match background"
+                className="w-full h-full object-cover opacity-50 transform scale-125"
+                style={{ transformOrigin: 'center center' }}
+              />
+            </div>
           </div>
         )}
         <div className={`p-8 relative z-10 min-h-full ${colors.text}`}>
@@ -437,7 +479,7 @@ export function CryptoWatchlistDashboard() {
                 <span>Mix N&apos; Match Mode</span>
                 <Switch
                   checked={isMixNMatchMode}
-                  onCheckedChange={setIsMixNMatchMode}
+                  onCheckedChange={handleMixNMatchModeChange}
                 />
               </div>
             </div>
@@ -599,6 +641,12 @@ export function CryptoWatchlistDashboard() {
           />
         )}
       </AnimatePresence>
+      
+      <FakeSupportChat
+        isDarkMode={isDarkMode}
+        isOpen={showSupportChat}
+        onClose={() => setShowSupportChat(false)}
+      />
     </div>
   )
 }

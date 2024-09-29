@@ -35,7 +35,13 @@ type GroupedMarkets = {
   };
 };
 
-const fetchWithRetry = async (fetchFunction: () => Promise<any>, retries = 3, delay = 2000): Promise<any> => {
+type FetchResult = {
+  markets: Market[];
+  assetCounts: Record<string, number>;
+  quoteAssets: string[];
+};
+
+const fetchWithRetry = async (fetchFunction: () => Promise<FetchResult>, retries = 3, delay = 2000): Promise<FetchResult> => {
   try {
     return await fetchFunction();
   } catch (error) {
@@ -102,23 +108,23 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
         ]);
 
         const allMarkets: Market[] = [
-          ...binanceSpot.markets.map((m: any) => ({ ...m, exchange: 'Binance', type: 'spot' })),
-          ...binanceFutures.markets.map((m: any) => ({ ...m, exchange: 'Binance', type: 'futures' })),
-          ...bybitSpot.markets.map((m: any) => ({ ...m, exchange: 'Bybit', type: 'spot' })),
-          ...bybitFutures.markets.map((m: any) => ({ ...m, exchange: 'Bybit', type: 'futures' })),
-          ...bitgetSpot.markets.map((m: any) => ({ ...m, exchange: 'Bitget', type: 'spot' })),
-          ...bitgetFutures.markets.map((m: any) => ({ ...m, exchange: 'Bitget', type: 'futures' })),
-          ...kucoinSpot.markets.map((m: any) => ({ ...m, exchange: 'KuCoin', type: 'spot' })),
-          ...kucoinFutures.markets.map((m: any) => ({ ...m, exchange: 'KuCoin', type: 'futures' })),
-          ...bitfinexSpot.markets.map((m: any) => ({ ...m, exchange: 'Bitfinex', type: 'spot' })),
-          ...dydxMarkets.markets.map((m: any) => ({ ...m, exchange: 'dYdX', type: 'futures' })),
-          ...okxSpot.markets.map((m: any) => ({ ...m, exchange: 'OKX', type: 'spot' })),
-          ...okxFutures.markets.map((m: any) => ({ ...m, exchange: 'OKX', type: 'futures' })),
-          ...mexcSpot.markets.map((m: any) => ({ ...m, exchange: 'MEXC', type: 'spot' })),
-          ...mexcFutures.markets.map((m: any) => ({ ...m, exchange: 'MEXC', type: 'futures' })),
-          ...poloniexSpot.markets.map((m: any) => ({ ...m, exchange: 'Poloniex', type: 'spot' })),
-          ...krakenSpot.markets.map((m: any) => ({ ...m, exchange: 'Kraken', type: 'spot' })),
-          ...cryptocomSpot.markets.map((m: any) => ({ ...m, exchange: 'Crypto.com', type: 'spot' }))
+          ...binanceSpot.markets.map((m: Market) => ({ ...m, exchange: 'Binance', type: 'spot' })),
+          ...binanceFutures.markets.map((m: Market) => ({ ...m, exchange: 'Binance', type: 'futures' })),
+          ...bybitSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bybit', type: 'spot' })),
+          ...bybitFutures.markets.map((m: Market) => ({ ...m, exchange: 'Bybit', type: 'futures' })),
+          ...bitgetSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bitget', type: 'spot' })),
+          ...bitgetFutures.markets.map((m: Market) => ({ ...m, exchange: 'Bitget', type: 'futures' })),
+          ...kucoinSpot.markets.map((m: Market) => ({ ...m, exchange: 'KuCoin', type: 'spot' })),
+          ...kucoinFutures.markets.map((m: Market) => ({ ...m, exchange: 'KuCoin', type: 'futures' })),
+          ...bitfinexSpot.markets.map((m: Market) => ({ ...m, exchange: 'Bitfinex', type: 'spot' })),
+          ...dydxMarkets.markets.map((m: Market) => ({ ...m, exchange: 'dYdX', type: 'futures' })),
+          ...okxSpot.markets.map((m: Market) => ({ ...m, exchange: 'OKX', type: 'spot' })),
+          ...okxFutures.markets.map((m: Market) => ({ ...m, exchange: 'OKX', type: 'futures' })),
+          ...mexcSpot.markets.map((m: Market) => ({ ...m, exchange: 'MEXC', type: 'spot' })),
+          ...mexcFutures.markets.map((m: Market) => ({ ...m, exchange: 'MEXC', type: 'futures' })),
+          ...poloniexSpot.markets.map((m: Market) => ({ ...m, exchange: 'Poloniex', type: 'spot' })),
+          ...krakenSpot.markets.map((m: Market) => ({ ...m, exchange: 'Kraken', type: 'spot' })),
+          ...cryptocomSpot.markets.map((m: Market) => ({ ...m, exchange: 'Crypto.com', type: 'spot' }))
         ];
 
         const grouped = allMarkets.reduce((acc, market) => {
@@ -185,9 +191,9 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
     });
   };
 
-  const getTotalMarkets = (markets: { spot: any, futures: any }) => {
-    const spotTotal = Object.values(markets.spot).reduce((acc: number, curr: any) => acc + curr.length, 0);
-    const futuresTotal = Object.values(markets.futures).reduce((acc: number, curr: any) => acc + curr.length, 0);
+  const getTotalMarkets = (markets: { spot: Record<string, Market[]>, futures: Record<string, Market[]> }) => {
+    const spotTotal = Object.values(markets.spot).reduce((acc: number, curr: Market[]) => acc + curr.length, 0);
+    const futuresTotal = Object.values(markets.futures).reduce((acc: number, curr: Market[]) => acc + curr.length, 0);
     return spotTotal + futuresTotal;
   };
 

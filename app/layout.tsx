@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     siteName: "Tradingview List Xpress",
     images: [
       {
-        url: '/components/Social.png', // Updated path
+        url: '/Social.png',
         width: 1200,
         height: 630,
         alt: 'TLX - Tradingview List Xpress',
@@ -24,10 +24,10 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "TLX - Tradingview List Xpress",
     description: "Create custom watchlists for cryptocurrency exchanges",
-    images: ['/components/Social.png'], // Updated path
+    images: ['/Social.png'],
   },
   icons: {
-    icon: '/app/favicon.svg', // Updated path
+    icon: '/favicon.svg',
   },
 };
 

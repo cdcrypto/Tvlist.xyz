@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Download, LineChart, Zap, X } from 'lucide-react'
+import { Download, LineChart, Zap, X, Twitter } from 'lucide-react'
 import { fetchAllSpotMarkets as fetchBinanceSpotMarkets, fetchAllFuturesMarkets as fetchBinanceFuturesMarkets } from '@/utils/fetchmarkets'
 import { fetchAllSpotMarkets as fetchBybitSpotMarkets, fetchAllFuturesMarkets as fetchBybitFuturesMarkets } from '@/utils/fetchbybit'
 import { fetchAllSpotMarkets as fetchBitgetSpotMarkets, fetchAllFuturesMarkets as fetchBitgetFuturesMarkets } from '@/utils/fetchbitget'
@@ -22,6 +22,7 @@ import { fetchAllSpotMarkets as fetchCryptocomSpotMarkets } from '@/utils/fetchc
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Header from './Header'  // Change this line
+import { MixNMatchMode } from './MixNMatchMode'
 
 const spotExchanges = [
   {
@@ -192,6 +193,8 @@ export function CryptoWatchlistDashboard() {
   const [hasSelectedFutures, setHasSelectedFutures] = useState(false);
   const [isExploding, setIsExploding] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);  // Changed to true
+  const [isMixNMatchMode, setIsMixNMatchMode] = useState(false);
+  const [retweetRequired, setRetweetRequired] = useState(true); // Add this line
 
   useEffect(() => {
     if (showModal) {
@@ -291,7 +294,25 @@ export function CryptoWatchlistDashboard() {
     setSyntheticBase(value as SyntheticPair);
   };
 
+  const handleRetweet = async () => {
+    // This is where you'd implement the actual retweet functionality
+    // For now, we'll simulate it with a timeout
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, 2000);
+    });
+  };
+
   const handleDownload = async () => {
+    if (retweetRequired) {
+      const retweeted = await handleRetweet();
+      if (!retweeted) {
+        alert("Please retweet to download the watchlist!");
+        return;
+      }
+    }
+
     if (!currentExchange) {
       console.log(`No exchange selected`)
       return
@@ -381,163 +402,187 @@ export function CryptoWatchlistDashboard() {
           </div>
         )}
         <div className={`p-8 relative z-10 min-h-full ${colors.text}`}>
-          {/* Market type buttons */}
-          <div className="max-w-4xl mx-auto mb-12">
-            <div className="flex justify-center space-x-4 mb-6">
-              <Button
-                variant="default"
-                onClick={() => handleMarketTypeChange('spot')}
-                className={`w-40 ${marketType === 'spot' ? colors.button.active : colors.button.inactive}`}
-              >
-                <Zap className="mr-2 h-4 w-4" /> Spot Markets
-              </Button>
-              <Button
-                variant="default"
-                onClick={() => handleMarketTypeChange('futures')}
-                className={`w-40 ${marketType === 'futures' ? colors.button.active : colors.button.inactive}`}
-              >
-                <LineChart className="mr-2 h-4 w-4" /> Futures Markets
-              </Button>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              {!isMixNMatchMode && (
+                <div className="flex space-x-4">
+                  <Button
+                    variant="default"
+                    onClick={() => handleMarketTypeChange('spot')}
+                    className={`w-40 ${marketType === 'spot' ? colors.button.active : colors.button.inactive}`}
+                  >
+                    <Zap className="mr-2 h-4 w-4" /> Spot Markets
+                  </Button>
+                  <Button
+                    variant="default"
+                    onClick={() => handleMarketTypeChange('futures')}
+                    className={`w-40 ${marketType === 'futures' ? colors.button.active : colors.button.inactive}`}
+                  >
+                    <LineChart className="mr-2 h-4 w-4" /> Futures Markets
+                  </Button>
+                </div>
+              )}
+            </div>
+            <div className="flex items-center space-x-2">
+              <span>Mix N' Match Mode</span>
+              <Switch
+                checked={isMixNMatchMode}
+                onCheckedChange={setIsMixNMatchMode}
+              />
             </div>
           </div>
 
-          {/* Exchange cards */}
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {exchanges.map((exchange) => (
-              <motion.div
-                key={exchange.name}
+          {isMixNMatchMode ? (
+            <MixNMatchMode isDarkMode={isDarkMode} />
+          ) : (
+            <>
+              {/* Exchange cards */}
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
                 initial={{ opacity: 0, y: 20 }}
-                animate={isExploding ? { 
-                  x: Math.random() * 1000 - 500, 
-                  y: Math.random() * 1000 - 500, 
-                  rotate: Math.random() * 360,
-                  opacity: 0
-                } : { opacity: 1, y: 0, x: 0, rotate: 0 }}
-                transition={{ 
-                  type: "spring",
-                  stiffness: 260,
-                  damping: 20,
-                  duration: isExploding ? 0.5 : 0.5
-                }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
               >
-                <ExchangeCard
-                  exchange={exchange}
-                  colors={colors}
-                  isShaking={isShaking}
-                  isUnclickable={showBackgroundGif || isExploding}
-                  handleChoosePairs={handleChoosePairs}
-                />
+                {exchanges.map((exchange) => (
+                  <motion.div
+                    key={exchange.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isExploding ? { 
+                      x: Math.random() * 1000 - 500, 
+                      y: Math.random() * 1000 - 500, 
+                      rotate: Math.random() * 360,
+                      opacity: 0
+                    } : { opacity: 1, y: 0, x: 0, rotate: 0 }}
+                    transition={{ 
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 20,
+                      duration: isExploding ? 0.5 : 0.5
+                    }}
+                  >
+                    <ExchangeCard
+                      exchange={exchange}
+                      colors={colors}
+                      isShaking={isShaking}
+                      isUnclickable={showBackgroundGif || isExploding}
+                      handleChoosePairs={handleChoosePairs}
+                    />
+                  </motion.div>
+                ))}
               </motion.div>
-            ))}
-          </motion.div>
 
-          {/* Modal */}
-          <AnimatePresence>
-            {showModal && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-              >
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.9, opacity: 0 }}
-                  className={`${colors.modal} rounded-lg p-6 w-full max-w-md max-h-[80vh] overflow-y-auto`}
-                >
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className={`text-lg font-semibold ${colors.modalText}`}>Select Quote Assets for {currentExchange} ({marketType})</h3>
-                    <Button variant="ghost" onClick={() => setShowModal(false)}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <p className={`text-sm ${colors.modalText} mb-4`}>
-                    Total markets: {allMarkets.length}
-                  </p>
-                  <div className="flex items-center justify-between space-x-2 mb-4">
-                    <div className="flex items-center space-x-2">
-                      <Switch
-                        id="synthetic-pair"
-                        checked={exportAsSynthetic}
-                        onCheckedChange={setExportAsSynthetic}
-                        className={colors.toggle}
-                      />
-                      <Label htmlFor="synthetic-pair" className={colors.checkboxText}>Export as Synthetic pair</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Label htmlFor="select-all" className={colors.checkboxText}>Select All</Label>
-                      <Checkbox 
-                        id="select-all" 
-                        checked={allAssetsSelected}
-                        onCheckedChange={handleSelectAllAssets}
-                        className="border-2 border-ftx-teal"
-                      />
-                    </div>
-                  </div>
-                  {exportAsSynthetic && (
-                    <div className="mb-4">
-                      <Select value={syntheticBase} onValueChange={handleSyntheticBaseChange}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select base asset" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="BTC">BTC</SelectItem>
-                          <SelectItem value="ETH">ETH</SelectItem>
-                          <SelectItem value="SOL">SOL</SelectItem>
-                          <SelectItem value="BNB">BNB</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-                  {loading ? (
-                    <p>Loading markets...</p>
-                  ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
-                      {sortedQuoteAssets.map(asset => (
-                        <div key={asset} className={`flex items-center space-x-2 ${colors.checkbox} p-2 rounded`}>
+              {/* Modal */}
+              <AnimatePresence>
+                {showModal && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+                  >
+                    <motion.div
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.9, opacity: 0 }}
+                      className={`${colors.modal} rounded-lg p-6 w-full max-w-md max-h-[80vh] overflow-y-auto`}
+                    >
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className={`text-lg font-semibold ${colors.modalText}`}>Select Quote Assets for {currentExchange} ({marketType})</h3>
+                        <Button variant="ghost" onClick={() => setShowModal(false)}>
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <p className={`text-sm ${colors.modalText} mb-4`}>
+                        Total markets: {allMarkets.length}
+                      </p>
+                      <div className="flex items-center justify-between space-x-2 mb-4">
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            id="synthetic-pair"
+                            checked={exportAsSynthetic}
+                            onCheckedChange={setExportAsSynthetic}
+                            className={colors.toggle}
+                          />
+                          <Label htmlFor="synthetic-pair" className={colors.checkboxText}>Export as Synthetic pair</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Label htmlFor="select-all" className={colors.checkboxText}>Select All</Label>
                           <Checkbox 
-                            id={asset} 
-                            checked={selectedQuoteAssets.includes(asset)}
-                            onCheckedChange={() => handleQuoteAssetChange(asset)}
+                            id="select-all" 
+                            checked={allAssetsSelected}
+                            onCheckedChange={handleSelectAllAssets}
                             className="border-2 border-ftx-teal"
                           />
-                          <Label htmlFor={asset} className={`flex-grow ${colors.checkboxText}`}>
-                            {asset}
-                            <span className="text-xs text-gray-500 ml-1">({assetCounts[asset] || 0})</span>
-                          </Label>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                  <p className={`text-sm ${colors.modalText} mb-2`}>
-                    Total assets selected: {filteredMarketsCount}
-                  </p>
-                  {filteredMarketsCount > 1000 && (
-                    <p className="text-sm text-yellow-500 mb-4">
-                      Note: More than 1000 assets selected. The download will be split into multiple files.
-                    </p>
-                  )}
-                  <Button
-                    className={`w-full ${colors.button.active} text-white transition-colors duration-300`}
-                    onClick={handleDownload}
-                    disabled={loading || selectedQuoteAssets.length === 0}
-                  >
-                    {loading ? 'Loading...' : (
-                      <>
-                        <Download className="mr-2 h-4 w-4" /> Download Watchlist
-                      </>
-                    )}
-                  </Button>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                      </div>
+                      {exportAsSynthetic && (
+                        <div className="mb-4">
+                          <Select value={syntheticBase} onValueChange={handleSyntheticBaseChange}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select base asset" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="BTC">BTC</SelectItem>
+                              <SelectItem value="ETH">ETH</SelectItem>
+                              <SelectItem value="SOL">SOL</SelectItem>
+                              <SelectItem value="BNB">BNB</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+                      {loading ? (
+                        <p>Loading markets...</p>
+                      ) : (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+                          {sortedQuoteAssets.map(asset => (
+                            <div key={asset} className={`flex items-center space-x-2 ${colors.checkbox} p-2 rounded`}>
+                              <Checkbox 
+                                id={asset} 
+                                checked={selectedQuoteAssets.includes(asset)}
+                                onCheckedChange={() => handleQuoteAssetChange(asset)}
+                                className="border-2 border-ftx-teal"
+                              />
+                              <Label htmlFor={asset} className={`flex-grow ${colors.checkboxText}`}>
+                                {asset}
+                                <span className="text-xs text-gray-500 ml-1">({assetCounts[asset] || 0})</span>
+                              </Label>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <p className={`text-sm ${colors.modalText} mb-2`}>
+                        Total assets selected: {filteredMarketsCount}
+                      </p>
+                      {filteredMarketsCount > 1000 && (
+                        <p className="text-sm text-yellow-500 mb-4">
+                          Note: More than 1000 assets selected. The download will be split into multiple files.
+                        </p>
+                      )}
+                      {retweetRequired && (
+                        <Button
+                          className={`w-full ${colors.button.active} text-white transition-colors duration-300 mb-2`}
+                          onClick={handleRetweet}
+                        >
+                          <Twitter className="mr-2 h-4 w-4" /> Retweet to Unlock Download
+                        </Button>
+                      )}
+                      <Button
+                        className={`w-full ${colors.button.active} text-white transition-colors duration-300`}
+                        onClick={handleDownload}
+                        disabled={loading || selectedQuoteAssets.length === 0 || (retweetRequired && !handleRetweet)}
+                      >
+                        {loading ? 'Loading...' : (
+                          <>
+                            <Download className="mr-2 h-4 w-4" /> Download Watchlist
+                          </>
+                        )}
+                      </Button>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          )}
         </div>
       </div>
       <AnimatePresence>

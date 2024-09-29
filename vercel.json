@@ -1,8 +1,0 @@
-{
-    "functions": {
-      "api/**/*.js": {
-        "regions": ["syd1", "cdg1", "hnd1"]
-      }
-    }
-  }
-  

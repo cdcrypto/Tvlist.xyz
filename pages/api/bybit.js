@@ -7,14 +7,22 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'URL parameter is required' });
   }
 
+  console.log('Fetching URL:', url);
+
   try {
     const response = await fetch(url);
     
+    console.log('Response status:', response.status);
+    console.log('Response headers:', response.headers);
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     
-    const data = await response.json();
+    const text = await response.text();
+    console.log('Response text:', text);
+
+    const data = JSON.parse(text);
     res.status(200).json(data);
   } catch (error) {
     console.error('Error fetching data from Bybit:', error);

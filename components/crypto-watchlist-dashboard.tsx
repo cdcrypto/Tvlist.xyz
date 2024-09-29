@@ -159,6 +159,10 @@ export function CryptoWatchlistDashboard() {
           setAssetCounts(assetCounts);
           setQuoteAssets(quoteAssets);
           setLoading(false);
+        }).catch(error => {
+          console.error('Error fetching markets:', error);
+          setLoading(false);
+          // Optionally, you can set an error state here to display to the user
         });
       }
     }

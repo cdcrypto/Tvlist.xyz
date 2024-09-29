@@ -4,16 +4,20 @@ const FUTURES_API_URL = '/api/bybit?url=https://api.bybit.com/v2/public/symbols'
 async function fetchMarkets(url, isSpot) {
     try {
         const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
+
+        if (data.retCode !== 0) {
+            throw new Error(`API returned error: ${data.retMsg || 'Unknown error'}`);
+        }
 
         let symbols = [];
         let statusToMatch = 'Trading'; // Default status for spot markets
 
         if (isSpot) {
             // For spot markets, symbols are in data.result.list
-            if (data.retCode !== 0) {
-                throw new Error(`API returned error: ${data.retMsg}`);
-            }
             symbols = data.result.list;
             statusToMatch = 'Trading';
         } else {
@@ -42,7 +46,7 @@ async function fetchMarkets(url, isSpot) {
         return { markets, assetCounts, quoteAssets };
     } catch (error) {
         console.error(`Error fetching ${isSpot ? 'spot' : 'futures'} markets:`, error);
-        return { markets: [], assetCounts: {}, quoteAssets: [] };
+        throw error; // Re-throw the error to be handled by the caller
     }
 }
 

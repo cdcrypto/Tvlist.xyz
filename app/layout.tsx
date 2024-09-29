@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: "TLX - Tradingview List Xpress",
   description: "Create custom watchlists for cryptocurrency exchanges",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

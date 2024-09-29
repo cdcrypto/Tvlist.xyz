@@ -60,7 +60,6 @@ module.exports = {
         'ftx-dark-blue-light': '#1E2329',
         'ftx-light-gray': '#F0F1F2',
         'ftx-dark-gray': '#474D57',
-        'neon-green': '#39FF14',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -93,6 +92,5 @@ module.exports = {
   },
   plugins: [
     require("tailwindcss-animate"),
-    require("@tailwindcss/forms"),
   ],
 }

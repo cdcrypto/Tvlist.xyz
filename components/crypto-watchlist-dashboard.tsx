@@ -124,6 +124,7 @@ export function CryptoWatchlistDashboard() {
   const [filteredMarketsCount, setFilteredMarketsCount] = useState(0)
   const [exportAsSynthetic, setExportAsSynthetic] = useState(false)
   const [syntheticBase, setSyntheticBase] = useState<SyntheticPair>('BTC')
+  const [allAssetsSelected, setAllAssetsSelected] = useState(false);
 
   useEffect(() => {
     if (showModal) {
@@ -162,7 +163,8 @@ export function CryptoWatchlistDashboard() {
         }).catch(error => {
           console.error('Error fetching markets:', error);
           setLoading(false);
-          // Optionally, you can set an error state here to display to the user
+          // Display error to the user
+          alert(`Error fetching markets: ${error.message}`);
         });
       }
     }
@@ -180,16 +182,19 @@ export function CryptoWatchlistDashboard() {
   }, [quoteAssets, assetCounts]);
 
   const handleQuoteAssetChange = (quoteAsset: string) => {
-    setSelectedQuoteAssets(prev => 
-      prev.includes(quoteAsset) 
+    setSelectedQuoteAssets(prev => {
+      const newSelection = prev.includes(quoteAsset)
         ? prev.filter(asset => asset !== quoteAsset)
-        : [...prev, quoteAsset]
-    )
-  }
+        : [...prev, quoteAsset];
+      setAllAssetsSelected(newSelection.length === quoteAssets.length);
+      return newSelection;
+    });
+  };
 
   const handleChoosePairs = (exchange: string) => {
     setCurrentExchange(exchange)
-    setSelectedQuoteAssets([]) // Clear selected assets when opening modal
+    setSelectedQuoteAssets([]); // Clear selected assets when opening modal
+    setAllAssetsSelected(false); // Reset all assets selected state
     setShowModal(true)
   }
 
@@ -261,6 +266,15 @@ export function CryptoWatchlistDashboard() {
 
   const colors = marketType === 'spot' ? spotColors : futuresColors;
   const exchanges = marketType === 'spot' ? spotExchanges : futuresExchanges;
+
+  const handleSelectAllAssets = (checked: boolean) => {
+    setAllAssetsSelected(checked);
+    if (checked) {
+      setSelectedQuoteAssets(quoteAssets);
+    } else {
+      setSelectedQuoteAssets([]);
+    }
+  };
 
   return (
     <div className={`min-h-screen ${colors.bg} p-8`}>
@@ -347,13 +361,23 @@ export function CryptoWatchlistDashboard() {
               <p className="text-sm text-gray-600 mb-4">
                 Total markets: {allMarkets.length}
               </p>
-              <div className="flex items-center space-x-2 mb-4">
-                <Switch
-                  id="synthetic-pair"
-                  checked={exportAsSynthetic}
-                  onCheckedChange={setExportAsSynthetic}
-                />
-                <Label htmlFor="synthetic-pair">Export as Synthetic pair</Label>
+              <div className="flex items-center justify-between space-x-2 mb-4">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="synthetic-pair"
+                    checked={exportAsSynthetic}
+                    onCheckedChange={setExportAsSynthetic}
+                  />
+                  <Label htmlFor="synthetic-pair">Export as Synthetic pair</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="select-all" 
+                    checked={allAssetsSelected}
+                    onCheckedChange={handleSelectAllAssets}
+                  />
+                  <Label htmlFor="select-all">Select All</Label>
+                </div>
               </div>
               {exportAsSynthetic && (
                 <div className="mb-4">

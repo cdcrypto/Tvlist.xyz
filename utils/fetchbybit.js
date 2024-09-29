@@ -1,6 +1,5 @@
-const PROXY_URL = 'https://api.allorigins.win/raw?url=';
-const SPOT_API_URL = `${PROXY_URL}${encodeURIComponent('https://api.bybit.com/v5/market/instruments-info?category=spot')}`;
-const FUTURES_API_URL = `${PROXY_URL}${encodeURIComponent('https://api.bybit.com/v5/market/instruments-info?category=linear')}`;
+const SPOT_API_URL = '/api/bybit?category=spot';
+const FUTURES_API_URL = '/api/bybit?category=linear';
 
 async function fetchMarkets(url, isSpot) {
     try {

@@ -197,6 +197,10 @@ export function CryptoWatchlistDashboard() {
     setQuoteAssets([])
   }
 
+  const handleSyntheticBaseChange = (value: string) => {
+    setSyntheticBase(value as SyntheticPair);
+  };
+
   const handleDownload = async () => {
     if (!currentExchange) {
       console.log(`No exchange selected`)
@@ -349,7 +353,7 @@ export function CryptoWatchlistDashboard() {
               </div>
               {exportAsSynthetic && (
                 <div className="mb-4">
-                  <Select value={syntheticBase} onValueChange={setSyntheticBase}>
+                  <Select value={syntheticBase} onValueChange={handleSyntheticBaseChange}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select base asset" />
                     </SelectTrigger>

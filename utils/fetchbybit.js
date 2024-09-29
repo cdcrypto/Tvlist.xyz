@@ -1,8 +1,10 @@
+// fetchbybit.js
+
 const SPOT_API_URL = `/api/bybit?url=${encodeURIComponent(
     'https://api.bybit.com/v5/market/instruments-info?category=spot'
   )}`;
   const FUTURES_API_URL = `/api/bybit?url=${encodeURIComponent(
-    'https://api.bybit.com/v2/public/symbols'
+    'https://api.bybit.com/v5/market/instruments-info?category=linear'
   )}`;
   
   async function fetchMarkets(url, isSpot) {
@@ -13,32 +15,20 @@ const SPOT_API_URL = `/api/bybit?url=${encodeURIComponent(
       }
       const data = await response.json();
   
-      // Handle different response formats for spot and futures
-      const retCode = data.retCode !== undefined ? data.retCode : data.ret_code;
-      const retMsg = data.retMsg !== undefined ? data.retMsg : data.ret_msg;
-  
-      if (retCode !== 0) {
-        throw new Error(`API returned error: ${retMsg || 'Unknown error'}`);
+      if (data.retCode !== 0) {
+        throw new Error(`API returned error: ${data.retMsg || 'Unknown error'}`);
       }
   
-      let symbols = [];
-      let statusToMatch = 'Trading';
-  
-      if (isSpot) {
-        // For spot markets, symbols are in data.result.list
-        symbols = data.result.list;
-      } else {
-        // For futures markets, symbols are in data.result
-        symbols = data.result;
-      }
+      let symbols = data.result.list;
+      let statusToMatch = 'Trading'; // Default status for spot markets
   
       const markets = symbols
         .filter((symbol) => symbol.status === statusToMatch)
         .map((symbol) => {
           return {
-            symbol: `BYBIT:${isSpot ? symbol.symbol : symbol.name}${isSpot ? '' : '.P'}`,
-            baseAsset: symbol.baseCoin || symbol.base_currency,
-            quoteAsset: symbol.quoteCoin || symbol.quote_currency,
+            symbol: `BYBIT:${symbol.symbol}${isSpot ? '' : '.P'}`,
+            baseAsset: symbol.baseCoin,
+            quoteAsset: symbol.quoteCoin,
           };
         });
   
@@ -63,4 +53,3 @@ const SPOT_API_URL = `/api/bybit?url=${encodeURIComponent(
   export async function fetchAllFuturesMarkets() {
     return fetchMarkets(FUTURES_API_URL, false);
   }
-  

@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Moon, Sun } from 'lucide-react'
 
@@ -29,7 +28,11 @@ const Logo = () => (
   </svg>
 )
 
-const Header: React.FC<{ isDarkMode: boolean; toggleDarkMode: () => void }> = ({ isDarkMode, toggleDarkMode }) => {
+const Header: React.FC<{ 
+  isDarkMode: boolean; 
+  toggleDarkMode: () => void;
+  resetToHome: () => void;  // Add this new prop
+}> = ({ isDarkMode, toggleDarkMode, resetToHome }) => {
   return (
     <motion.header 
       className={`w-full py-4 px-6 ${isDarkMode ? 'bg-ftx-dark-blue text-white' : 'bg-white text-ftx-dark-blue'} shadow-md transition-colors duration-300`}
@@ -38,7 +41,7 @@ const Header: React.FC<{ isDarkMode: boolean; toggleDarkMode: () => void }> = ({
       transition={{ duration: 0.5 }}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link href="/" className="flex items-center space-x-2 group">
+        <button onClick={resetToHome} className="flex items-center space-x-2 group">
           <motion.div
             whileHover={{ rotate: 360 }}
             transition={{ duration: 0.5 }}
@@ -54,7 +57,7 @@ const Header: React.FC<{ isDarkMode: boolean; toggleDarkMode: () => void }> = ({
               Tradingview List Xpress
             </span>
           </div>
-        </Link>
+        </button>
         <div className="flex items-center space-x-6">
           <button 
             onClick={toggleDarkMode} 

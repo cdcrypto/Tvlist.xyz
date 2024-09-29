@@ -382,9 +382,19 @@ export function CryptoWatchlistDashboard() {
     setIsDarkMode(!isDarkMode)
   }
 
+  const resetToHome = useCallback(() => {
+    setIsMixNMatchMode(false);
+    setMarketType('spot');
+    // Add any other state resets you want to perform
+  }, []);
+
   return (
     <div className={`min-h-screen relative overflow-hidden flex flex-col ${colors.bg} transition-colors duration-300`}>
-      <Header isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+      <Header 
+        isDarkMode={isDarkMode} 
+        toggleDarkMode={toggleDarkMode} 
+        resetToHome={resetToHome}  // Pass the new function here
+      />
       <div className="flex-grow">
         {backgroundGifLoaded && (
           <div 
@@ -402,25 +412,28 @@ export function CryptoWatchlistDashboard() {
         <div className={`p-8 relative z-10 min-h-full ${colors.text}`}>
           <div className="max-w-6xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-              {!isMixNMatchMode && (
-                <div className="flex space-x-4">
-                  <Button
-                    variant="default"
-                    onClick={() => handleMarketTypeChange('spot')}
-                    className={`w-40 ${marketType === 'spot' ? colors.button.active : colors.button.inactive}`}
-                  >
-                    <Zap className="mr-2 h-4 w-4" /> Spot Markets
-                  </Button>
-                  <Button
-                    variant="default"
-                    onClick={() => handleMarketTypeChange('futures')}
-                    className={`w-40 ${marketType === 'futures' ? colors.button.active : colors.button.inactive}`}
-                  >
-                    <LineChart className="mr-2 h-4 w-4" /> Futures Markets
-                  </Button>
-                </div>
-              )}
-              <div className="flex items-center space-x-2">
+              <div className="w-1/3"></div> {/* Spacer */}
+              <div className="flex justify-center w-1/3">
+                {!isMixNMatchMode && (
+                  <div className="flex space-x-4">
+                    <Button
+                      variant="default"
+                      onClick={() => handleMarketTypeChange('spot')}
+                      className={`w-40 ${marketType === 'spot' ? colors.button.active : colors.button.inactive}`}
+                    >
+                      <Zap className="mr-2 h-4 w-4" /> Spot Markets
+                    </Button>
+                    <Button
+                      variant="default"
+                      onClick={() => handleMarketTypeChange('futures')}
+                      className={`w-40 ${marketType === 'futures' ? colors.button.active : colors.button.inactive}`}
+                    >
+                      <LineChart className="mr-2 h-4 w-4" /> Futures Markets
+                    </Button>
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center space-x-2 w-1/3 justify-end">
                 <span>Mix N&apos; Match Mode</span>
                 <Switch
                   checked={isMixNMatchMode}

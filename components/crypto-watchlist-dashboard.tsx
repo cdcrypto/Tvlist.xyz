@@ -26,6 +26,7 @@ import { MixNMatchMode } from './MixNMatchMode'
 import FakeSupportChat from './FakeSupportChat'
 import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { fetchAllGateSpotMarkets, fetchAllGateFuturesMarkets } from '@/utils/fetchgate';
+import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
 
 const spotExchanges = [
   {
@@ -76,6 +77,10 @@ const spotExchanges = [
     name: 'Gate.io',
     logo: 'https://assets.coingecko.com/markets/images/60/large/gate_io_logo1.jpg?1706864280',
   },
+  {
+    name: 'Phemex',
+    logo: 'https://assets.coingecko.com/coins/images/33314/standard/phemex_logo.png?1701959611',
+  },
 ]
 
 const futuresExchanges = [
@@ -106,6 +111,10 @@ const futuresExchanges = [
   {
     name: 'MEXC',
     logo: 'https://assets.coingecko.com/markets/images/409/large/MEXC_logo_square.jpeg?1706864416',
+  },
+  {
+    name: 'Phemex',
+    logo: 'https://assets.coingecko.com/coins/images/33314/standard/phemex_logo.png?1701959611',
   },
   // Gate.io removed from futures exchanges
 ]
@@ -251,6 +260,8 @@ export function CryptoWatchlistDashboard() {
         fetchFunction = fetchCoinbaseMarkets;
       } else if (currentExchange === 'Gate.io' && marketType === 'spot') {
         fetchFunction = fetchAllGateSpotMarkets;
+      } else if (currentExchange === 'Phemex') {
+        fetchFunction = marketType === 'spot' ? fetchPhemexSpotMarkets : fetchPhemexFuturesMarkets;
       }
       
       if (fetchFunction) {

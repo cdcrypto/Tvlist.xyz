@@ -13,6 +13,7 @@ import { fetchAllSpotMarkets as fetchCryptocomSpotMarkets } from '@/utils/fetchc
 import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { useMixNMatchContext } from '@/contexts/MixNMatchContext';
 import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
+import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -95,6 +96,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           cryptocomSpot,
           coinbaseSpot,
           gateSpot,
+          phemexSpot,
+          phemexFutures
         ] = await Promise.all([
           fetchWithRetry(() => fetchBinanceSpotMarkets()),
           fetchWithRetry(() => fetchBinanceFuturesMarkets()),
@@ -115,6 +118,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           fetchWithRetry(() => fetchCryptocomSpotMarkets()),
           fetchWithRetry(() => fetchCoinbaseMarkets()),
           fetchWithRetry(() => fetchAllGateSpotMarkets()),
+          fetchWithRetry(() => fetchPhemexSpotMarkets()),
+          fetchWithRetry(() => fetchPhemexFuturesMarkets())
         ]);
 
         const allMarkets: Market[] = [
@@ -137,6 +142,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           ...cryptocomSpot.markets.map(m => ({ ...m, exchange: 'Crypto.com', type: 'spot' as const })),
           ...coinbaseSpot.markets.map(m => ({ ...m, exchange: 'Coinbase', type: 'spot' as const })),
           ...gateSpot.markets.map(m => ({ ...m, exchange: 'Gate.io', type: 'spot' as const })),
+          ...phemexSpot.markets.map(m => ({ ...m, exchange: 'Phemex', type: 'spot' as const })),
+          ...phemexFutures.markets.map(m => ({ ...m, exchange: 'Phemex', type: 'futures' as const }))
         ];
 
         const grouped = allMarkets.reduce((acc, market) => {

@@ -19,7 +19,7 @@ export default function GuidePage() {
         
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">What is TLX?</h2>
-          <p className="mb-4">TLX, short for TradingView List Xpress, is an indispensable tool for cryptocurrency traders and analysts. Designed to enhance your trading experience, TLX allows you to create customized watchlists tailored to various cryptocurrency exchanges. Whether you're dealing with spot markets or futures, TLX simplifies the process of tracking and analyzing multiple assets across different platforms, making your trading workflow more efficient and streamlined.</p>
+          <p className="mb-4">TLX, short for TradingView List Xpress, is an indispensable tool for cryptocurrency traders and analysts. Designed to enhance your trading experience, TLX allows you to create customized watchlists tailored to various cryptocurrency exchanges. Whether you&apos;re dealing with spot markets or futures, TLX simplifies the process of tracking and analyzing multiple assets across different platforms, making your trading workflow more efficient and streamlined.</p>
         </section>
 
         <section className="mb-8">
@@ -36,7 +36,7 @@ export default function GuidePage() {
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Mix and Match Mode</h2>
-          <p className="mb-4">One of TLX's standout features is the Mix and Match Mode. This advanced functionality allows you to create diverse watchlists by combining assets from multiple exchanges. It's perfect for traders who want to compare assets across different platforms or diversify their watchlists to include a broader range of cryptocurrencies.</p>
+          <p className="mb-4">One of TLX&apos;s standout features is the Mix and Match Mode. This advanced functionality allows you to create diverse watchlists by combining assets from multiple exchanges. It&apos;s perfect for traders who want to compare assets across different platforms or diversify their watchlists to include a broader range of cryptocurrencies.</p>
           <h3 className="text-xl font-semibold mt-4 mb-2">How to Use Mix and Match Mode:</h3>
           <ol className="list-decimal list-inside space-y-2 pl-4">
             <li>Enable the Feature: Toggle the Mix and Match Mode switch on the TLX dashboard.</li>
@@ -59,14 +59,14 @@ export default function GuidePage() {
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Get Started with TLX Today</h2>
-          <p className="mb-4">Whether you're a day trader, swing trader, or long-term investor, TLX is designed to keep you ahead in the fast-paced cryptocurrency markets. Start creating your custom watchlists today and elevate your trading game to the next level!</p>
+          <p className="mb-4">Whether you&apos;re a day trader, swing trader, or long-term investor, TLX is designed to keep you ahead in the fast-paced cryptocurrency markets. Start creating your custom watchlists today and elevate your trading game to the next level!</p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Why Choose TLX?</h2>
           <ul className="list-disc list-inside space-y-2 pl-4">
             <li>User-Friendly Interface: Intuitive design makes it easy for traders of all levels to navigate and utilize.</li>
-            <li>Comprehensive Support: Access to a range of resources and customer support to help you maximize TLX's potential.</li>
+            <li>Comprehensive Support: Access to a range of resources and customer support to help you maximize TLX&apos;s potential.</li>
             <li>Regular Updates: Continuous improvements and updates ensure TLX remains aligned with the latest market trends and trading tools.</li>
           </ul>
           <p className="mt-4 font-semibold">Ready to enhance your crypto trading experience? <a href="/" className="text-ftx-teal hover:underline">Get Started with TLX Now</a> and take control of your cryptocurrency watchlists with ease and precision.</p>
@@ -81,11 +81,11 @@ export default function GuidePage() {
             </div>
             <div>
               <h3 className="text-xl font-semibold">2. Can I customize my watchlists based on my trading strategy?</h3>
-              <p>Absolutely! TLX allows you to tailor your watchlists to fit various trading strategies, whether you're focusing on short-term trades or long-term investments.</p>
+              <p>Absolutely! TLX allows you to tailor your watchlists to fit various trading strategies, whether you&apos;re focusing on short-term trades or long-term investments.</p>
             </div>
             <div>
               <h3 className="text-xl font-semibold">3. How does TLX integrate with TradingView?</h3>
-              <p>Once you download your custom watchlist from TLX, you can easily import it into TradingView, allowing you to utilize TradingView's powerful charting and analysis tools.</p>
+              <p>Once you download your custom watchlist from TLX, you can easily import it into TradingView, allowing you to utilize TradingView&apos;s powerful charting and analysis tools.</p>
             </div>
           </div>
         </section>

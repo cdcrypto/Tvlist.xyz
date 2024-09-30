@@ -27,6 +27,7 @@ import FakeSupportChat from './FakeSupportChat'
 import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
 import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
+import { useTheme } from 'next-themes';
 
 interface FetchResult {
   markets: { symbol: string; baseAsset: string; quoteAsset: string }[];
@@ -201,6 +202,9 @@ const ExchangeCard = React.memo(({ exchange, colors, isShaking, isUnclickable, h
 ExchangeCard.displayName = 'ExchangeCard'
 
 export function CryptoWatchlistDashboard() {
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
+
   const [marketType, setMarketType] = useState<'spot' | 'futures'>('spot')
   const [loading, setLoading] = useState(false)
   const [selectedQuoteAssets, setSelectedQuoteAssets] = useState<string[]>([])
@@ -216,7 +220,6 @@ export function CryptoWatchlistDashboard() {
   const [showBackgroundGif, setShowBackgroundGif] = useState(false);
   const [hasSelectedFutures, setHasSelectedFutures] = useState(false);
   const [isExploding, setIsExploding] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);  // Changed to true
   const [isMixNMatchMode, setIsMixNMatchMode] = useState(false);
   const [backgroundGifLoaded, setBackgroundGifLoaded] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
@@ -424,10 +427,6 @@ export function CryptoWatchlistDashboard() {
     console.log('showBackgroundGif:', showBackgroundGif)
   }, [showBackgroundGif])
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode)
-  }
-
   const resetToHome = useCallback(() => {
     setIsMixNMatchMode(false);
     setMarketType('spot');
@@ -449,11 +448,7 @@ export function CryptoWatchlistDashboard() {
 
   return (
     <div className={`min-h-screen relative overflow-hidden flex flex-col ${colors.bg} transition-colors duration-300 ${isPixelated ? 'pixelated-container' : ''}`}>
-      <Header 
-        isDarkMode={isDarkMode} 
-        toggleDarkMode={toggleDarkMode} 
-        resetToHome={resetToHome}
-      />
+      <Header resetToHome={resetToHome} />
       <div className="flex-grow">
         {backgroundGifLoaded && (
           <div 
@@ -514,6 +509,7 @@ export function CryptoWatchlistDashboard() {
                 <Switch
                   checked={isMixNMatchMode}
                   onCheckedChange={handleMixNMatchModeChange}
+                  className="h-8" // Increased height here
                 />
               </div>
             </div>

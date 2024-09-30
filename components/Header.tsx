@@ -1,15 +1,33 @@
 'use client'
 
-import React from 'react'
-import { motion } from 'framer-motion'
-import { Moon, Sun } from 'lucide-react'
-import { Logo } from './Logo'
+import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Moon, Sun, Home } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { motion } from 'framer-motion';
+import { Logo } from './Logo';
+import { useTheme } from 'next-themes';
 
-const Header: React.FC<{ 
-  isDarkMode: boolean; 
-  toggleDarkMode: () => void;
+interface HeaderProps {
   resetToHome: () => void;
-}> = ({ isDarkMode, toggleDarkMode, resetToHome }) => {
+}
+
+const Header: React.FC<HeaderProps> = ({ resetToHome }) => {
+  const router = useRouter();
+  const { theme, setTheme } = useTheme();
+
+  const isDarkMode = theme === 'dark';
+
+  const handleGuideClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push('/guide');
+  };
+
+  const toggleDarkMode = () => {
+    setTheme(isDarkMode ? 'light' : 'dark');
+  };
+
   return (
     <motion.header 
       className={`w-full py-4 px-6 ${isDarkMode ? 'bg-ftx-dark-blue text-white' : 'bg-white text-ftx-dark-blue'} shadow-md transition-colors duration-300`}
@@ -18,7 +36,7 @@ const Header: React.FC<{
       transition={{ duration: 0.5 }}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <button onClick={resetToHome} className="flex items-center space-x-2 group">
+        <Link href="/" onClick={resetToHome} className="flex items-center space-x-2 group">
           <motion.div
             whileHover={{ rotate: 360 }}
             transition={{ duration: 0.5 }}
@@ -34,18 +52,21 @@ const Header: React.FC<{
               Tradingview List Xpress
             </span>
           </div>
-        </button>
-        <div className="flex items-center space-x-6">
-          <button 
-            onClick={toggleDarkMode} 
-            className={`p-2 rounded-full ${isDarkMode ? 'bg-ftx-dark-blue-light text-ftx-teal' : 'bg-ftx-light-gray text-ftx-dark-blue'} transition-colors duration-300`}
-          >
-            {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
+        </Link>
+        <div className="flex items-center space-x-4">
+          <Link href="/guide" onClick={handleGuideClick} className="hover:underline">Guide</Link>
+          <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
+            {isDarkMode ? <Sun className="h-[1.2rem] w-[1.2rem]" /> : <Moon className="h-[1.2rem] w-[1.2rem]" />}
+          </Button>
+          <Link href="/">
+            <Button variant="ghost" size="icon">
+              <Home className="h-[1.2rem] w-[1.2rem]" />
+            </Button>
+          </Link>
         </div>
       </div>
     </motion.header>
-  )
-}
+  );
+};
 
 export default Header;

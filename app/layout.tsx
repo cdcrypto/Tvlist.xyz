@@ -3,6 +3,7 @@ import "./globals.css";
 import { Providers } from './providers';
 import { MixNMatchProvider } from '@/contexts/MixNMatchContext';
 import { Analytics } from "@vercel/analytics/react";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "TLX - Tradingview List Xpress",
@@ -40,9 +41,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <MixNMatchProvider>
-          <Providers>{children}</Providers>
-        </MixNMatchProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <MixNMatchProvider>
+            <Providers>{children}</Providers>
+          </MixNMatchProvider>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

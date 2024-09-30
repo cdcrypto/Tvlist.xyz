@@ -443,7 +443,7 @@ export function CryptoWatchlistDashboard() {
       setTimeout(() => {
         setShowMixNMatchGif(false);
         setIsPixelated(false);
-      }, 5000); // Show the GIF and pixelation effect for 5 seconds
+      }, 2500); // Changed from 5000 to 2500 milliseconds (2.5 seconds)
     }
   };
 

@@ -35,8 +35,9 @@ export const MixNMatchProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [selectedQuoteAssets, setSelectedQuoteAssets] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    const cachedMarkets = localStorage.getItem('mixNMatchMarkets');
-    const cachedSelectedAssets = localStorage.getItem('mixNMatchSelectedAssets');
+    // Load data from session storage on component mount
+    const cachedMarkets = sessionStorage.getItem('mixNMatchMarkets');
+    const cachedSelectedAssets = sessionStorage.getItem('mixNMatchSelectedAssets');
     
     if (cachedMarkets) {
       setGroupedMarkets(JSON.parse(cachedMarkets));
@@ -48,11 +49,13 @@ export const MixNMatchProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('mixNMatchMarkets', JSON.stringify(groupedMarkets));
+    // Save data to session storage whenever it changes
+    sessionStorage.setItem('mixNMatchMarkets', JSON.stringify(groupedMarkets));
   }, [groupedMarkets]);
 
   useEffect(() => {
-    localStorage.setItem('mixNMatchSelectedAssets', JSON.stringify(Array.from(selectedQuoteAssets)));
+    // Save selected assets to session storage whenever they change
+    sessionStorage.setItem('mixNMatchSelectedAssets', JSON.stringify(Array.from(selectedQuoteAssets)));
   }, [selectedQuoteAssets]);
 
   return (

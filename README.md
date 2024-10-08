@@ -10,10 +10,13 @@ Features:
 - Open source
 
 To Deploy locally:
--npm install
--npm run dev
+
+  -  npm install
+
+  -  npm run dev
 
 To deploy to Vercel
+
 - should be able to one click deploy from vercel dashboard from github, no environment variables currently needed since it uses public apis rather than ones with keys needed
 
 

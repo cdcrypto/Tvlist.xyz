@@ -17,6 +17,11 @@ To deploy to Vercel
 - should be able to one click deploy from vercel dashboard from github, no environment variables currently needed since it uses public apis rather than ones with keys needed
 
 
+
+![image](https://github.com/user-attachments/assets/2723c45e-2fe7-42bc-a354-80da5338200f)
+
+
+
 Feel free to submit a pull request if you want to add anything to the official deployment on TVLIST.XYZ . 
 
 

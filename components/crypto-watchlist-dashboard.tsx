@@ -28,7 +28,7 @@ import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
 import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
 import { useTheme } from 'next-themes';
-import DownloadPopup from './DownloadPopup'
+import { DownloadPopup } from './DownloadPopup'
 
 interface FetchResult {
   markets: { symbol: string; baseAsset: string; quoteAsset: string }[];

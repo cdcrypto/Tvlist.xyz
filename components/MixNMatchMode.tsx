@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Download, Search, ChevronDown, ChevronRight } from 'lucide-react';
 import FakeSupportChat from './FakeSupportChat';
+import { DownloadPopup } from './DownloadPopup';
 
 type Market = {
   symbol: string;
@@ -64,6 +65,7 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedExchanges, setExpandedExchanges] = useState<Set<string>>(new Set());
   const [showSupportChat, setShowSupportChat] = useState(false);
+  const [showDownloadPopup, setShowDownloadPopup] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [totalSelectedMarkets, setTotalSelectedMarkets] = useState(0);
 
@@ -228,11 +230,17 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     
-    // Close the support chat after the download is complete
+    // Show download popup and close support chat
     setTimeout(() => {
       setShowSupportChat(false);
       setShowWarning(false);
+      setShowDownloadPopup(true);
     }, 2000);
+
+    // Auto close download popup after 10 seconds
+    setTimeout(() => {
+      setShowDownloadPopup(false);
+    }, 12000);
   };
 
   const toggleExchangeExpansion = (exchange: string) => {
@@ -372,6 +380,11 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
         isDarkMode={isDarkMode}
         isOpen={showSupportChat}
         onClose={() => setShowSupportChat(false)}
+      />
+      <DownloadPopup
+        isDarkMode={isDarkMode}
+        isOpen={showDownloadPopup}
+        onClose={() => setShowDownloadPopup(false)}
       />
     </div>
   );

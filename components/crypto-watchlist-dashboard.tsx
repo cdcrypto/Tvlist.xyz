@@ -28,6 +28,7 @@ import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
 import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
 import { useTheme } from 'next-themes';
+import DownloadPopup from './DownloadPopup'
 
 interface FetchResult {
   markets: { symbol: string; baseAsset: string; quoteAsset: string }[];
@@ -228,6 +229,7 @@ export function CryptoWatchlistDashboard() {
   const [isPixelated, setIsPixelated] = useState(false);
   const [hasMixNMatchBeenActivated, setHasMixNMatchBeenActivated] = useState(false);
   const [showSupportChat, setShowSupportChat] = useState(false);
+  const [showDownloadPopup, setShowDownloadPopup] = useState(false);
 
   useEffect(() => {
     const futuresGif = new window.Image();
@@ -396,6 +398,17 @@ export function CryptoWatchlistDashboard() {
       }
 
       setShowModal(false)
+      
+      // Show download popup and close support chat
+      setTimeout(() => {
+        setShowSupportChat(false)
+        setShowDownloadPopup(true)
+      }, 2000)
+
+      // Auto close download popup after 10 seconds
+      setTimeout(() => {
+        setShowDownloadPopup(false)
+      }, 12000)
     } catch (error: unknown) {
       console.error('Error downloading markets:', error)
       if (error instanceof Error) {
@@ -405,8 +418,6 @@ export function CryptoWatchlistDashboard() {
       }
     } finally {
       setLoading(false)
-      // Close the support chat after the download is complete
-      setTimeout(() => setShowSupportChat(false), 2000)
     }
   }
 
@@ -676,6 +687,11 @@ export function CryptoWatchlistDashboard() {
         isDarkMode={isDarkMode}
         isOpen={showSupportChat}
         onClose={() => setShowSupportChat(false)}
+      />
+      <DownloadPopup
+        isDarkMode={isDarkMode}
+        isOpen={showDownloadPopup}
+        onClose={() => setShowDownloadPopup(false)}
       />
     </div>
   )

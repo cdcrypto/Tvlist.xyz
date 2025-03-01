@@ -89,11 +89,7 @@ const spotExchanges = [
   {
     name: 'Phemex',
     logo: 'https://assets.coingecko.com/coins/images/33314/standard/phemex_logo.png?1701959611',
-  },
-  {
-    name: 'Breakout Prop',
-    logo: 'https://s3-eu-west-1.amazonaws.com/tpd/logos/64e6c9c34586776535d6e2ba/0x0.png',
-  },
+  }
 ]
 
 const futuresExchanges = [

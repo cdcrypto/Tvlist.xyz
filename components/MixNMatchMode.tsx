@@ -14,6 +14,7 @@ import { useMixNMatchContext } from '@/contexts/MixNMatchContext';
 import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
 import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
+import { fetchAllMarkets as fetchBreakoutPropMarkets } from '@/utils/fetchbreakoutprop';
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -99,7 +100,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           coinbaseSpot,
           gateSpot,
           phemexSpot,
-          phemexFutures
+          phemexFutures,
+          breakoutPropMarkets
         ] = await Promise.all([
           fetchWithRetry(() => fetchBinanceSpotMarkets()),
           fetchWithRetry(() => fetchBinanceFuturesMarkets()),
@@ -121,7 +123,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           fetchWithRetry(() => fetchCoinbaseMarkets()),
           fetchWithRetry(() => fetchAllGateSpotMarkets()),
           fetchWithRetry(() => fetchPhemexSpotMarkets() as Promise<FetchResult>),
-          fetchWithRetry(() => fetchPhemexFuturesMarkets() as Promise<FetchResult>)
+          fetchWithRetry(() => fetchPhemexFuturesMarkets() as Promise<FetchResult>),
+          fetchWithRetry(() => fetchBreakoutPropMarkets())
         ]);
 
         const allMarkets: Market[] = [
@@ -145,7 +148,8 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           ...coinbaseSpot.markets.map(m => ({ ...m, exchange: 'Coinbase', type: 'spot' as const })),
           ...gateSpot.markets.map(m => ({ ...m, exchange: 'Gate.io', type: 'spot' as const })),
           ...phemexSpot.markets.map(m => ({ ...m, exchange: 'Phemex', type: 'spot' as const })),
-          ...phemexFutures.markets.map(m => ({ ...m, exchange: 'Phemex', type: 'futures' as const }))
+          ...phemexFutures.markets.map(m => ({ ...m, exchange: 'Phemex', type: 'futures' as const })),
+          ...breakoutPropMarkets.markets.map(m => ({ ...m, exchange: 'Breakout Prop', type: 'futures' as const }))
         ];
 
         const grouped = allMarkets.reduce((acc, market) => {

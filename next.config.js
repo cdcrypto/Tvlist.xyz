@@ -15,6 +15,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'assets.coingecko.com',
       },
+      {
+        protocol: 'https',
+        hostname: 's3-eu-west-1.amazonaws.com',
+      },
     ],
   },
 }

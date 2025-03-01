@@ -27,6 +27,7 @@ import FakeSupportChat from './FakeSupportChat'
 import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
 import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
+import { fetchAllMarkets as fetchBreakoutPropMarkets } from '@/utils/fetchbreakoutprop';
 import { useTheme } from 'next-themes';
 import { DownloadPopup } from './DownloadPopup'
 
@@ -89,6 +90,10 @@ const spotExchanges = [
     name: 'Phemex',
     logo: 'https://assets.coingecko.com/coins/images/33314/standard/phemex_logo.png?1701959611',
   },
+  {
+    name: 'Breakout Prop',
+    logo: 'https://s3-eu-west-1.amazonaws.com/tpd/logos/64e6c9c34586776535d6e2ba/0x0.png',
+  },
 ]
 
 const futuresExchanges = [
@@ -123,6 +128,10 @@ const futuresExchanges = [
   {
     name: 'Phemex',
     logo: 'https://assets.coingecko.com/coins/images/33314/standard/phemex_logo.png?1701959611',
+  },
+  {
+    name: 'Breakout Prop',
+    logo: 'https://s3-eu-west-1.amazonaws.com/tpd/logos/64e6c9c34586776535d6e2ba/0x0.png',
   },
   // Gate.io removed from futures exchanges
 ]
@@ -232,13 +241,16 @@ export function CryptoWatchlistDashboard() {
   const [showDownloadPopup, setShowDownloadPopup] = useState(false);
 
   useEffect(() => {
-    const futuresGif = new window.Image();
-    futuresGif.onload = () => setBackgroundGifLoaded(true);
-    futuresGif.src = "https://s11.gifyu.com/images/SAtDO.gif";
+    // Only run in browser environment
+    if (typeof window !== 'undefined') {
+      const futuresGif = new window.Image();
+      futuresGif.onload = () => setBackgroundGifLoaded(true);
+      futuresGif.src = "https://s11.gifyu.com/images/SAtDO.gif";
 
-    const mixNMatchGif = new window.Image();
-    mixNMatchGif.onload = () => setMixNMatchGifLoaded(true);
-    mixNMatchGif.src = "https://s1.gifyu.com/images/SA5EY.gif";
+      const mixNMatchGif = new window.Image();
+      mixNMatchGif.onload = () => setMixNMatchGifLoaded(true);
+      mixNMatchGif.src = "https://s1.gifyu.com/images/SA5EY.gif";
+    }
   }, []);
 
   useEffect(() => {
@@ -274,6 +286,8 @@ export function CryptoWatchlistDashboard() {
         fetchFunction = fetchAllGateSpotMarkets;
       } else if (currentExchange === 'Phemex') {
         fetchFunction = marketType === 'spot' ? fetchPhemexSpotMarkets : fetchPhemexFuturesMarkets;
+      } else if (currentExchange === 'Breakout Prop') {
+        fetchFunction = fetchBreakoutPropMarkets;
       }
       
       if (fetchFunction) {

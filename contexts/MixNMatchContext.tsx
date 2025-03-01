@@ -30,33 +30,48 @@ type MixNMatchContextType = {
 
 const MixNMatchContext = createContext<MixNMatchContextType | undefined>(undefined);
 
+// Helper function to check if code is running in browser
+const isBrowser = () => typeof window !== 'undefined';
+
 export const MixNMatchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [groupedMarkets, setGroupedMarkets] = useState<GroupedMarkets>({});
   const [selectedQuoteAssets, setSelectedQuoteAssets] = useState<Set<string>>(new Set());
+  const [isClient, setIsClient] = useState(false);
 
+  // Set isClient to true once component mounts
   useEffect(() => {
-    // Load data from session storage on component mount
-    const cachedMarkets = sessionStorage.getItem('mixNMatchMarkets');
-    const cachedSelectedAssets = sessionStorage.getItem('mixNMatchSelectedAssets');
-    
-    if (cachedMarkets) {
-      setGroupedMarkets(JSON.parse(cachedMarkets));
-    }
-    
-    if (cachedSelectedAssets) {
-      setSelectedQuoteAssets(new Set(JSON.parse(cachedSelectedAssets)));
-    }
+    setIsClient(true);
   }, []);
 
   useEffect(() => {
-    // Save data to session storage whenever it changes
-    sessionStorage.setItem('mixNMatchMarkets', JSON.stringify(groupedMarkets));
-  }, [groupedMarkets]);
+    // Only access sessionStorage on the client side
+    if (isBrowser()) {
+      const cachedMarkets = sessionStorage.getItem('mixNMatchMarkets');
+      const cachedSelectedAssets = sessionStorage.getItem('mixNMatchSelectedAssets');
+      
+      if (cachedMarkets) {
+        setGroupedMarkets(JSON.parse(cachedMarkets));
+      }
+      
+      if (cachedSelectedAssets) {
+        setSelectedQuoteAssets(new Set(JSON.parse(cachedSelectedAssets)));
+      }
+    }
+  }, [isClient]); // Only run when component mounts on client
 
   useEffect(() => {
-    // Save selected assets to session storage whenever they change
-    sessionStorage.setItem('mixNMatchSelectedAssets', JSON.stringify(Array.from(selectedQuoteAssets)));
-  }, [selectedQuoteAssets]);
+    // Only save to sessionStorage on the client side
+    if (isBrowser() && isClient) {
+      sessionStorage.setItem('mixNMatchMarkets', JSON.stringify(groupedMarkets));
+    }
+  }, [groupedMarkets, isClient]);
+
+  useEffect(() => {
+    // Only save to sessionStorage on the client side
+    if (isBrowser() && isClient) {
+      sessionStorage.setItem('mixNMatchSelectedAssets', JSON.stringify(Array.from(selectedQuoteAssets)));
+    }
+  }, [selectedQuoteAssets, isClient]);
 
   return (
     <MixNMatchContext.Provider value={{ groupedMarkets, setGroupedMarkets, selectedQuoteAssets, setSelectedQuoteAssets }}>

@@ -15,6 +15,7 @@ import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
 import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
 import { fetchAllMarkets as fetchBreakoutPropMarkets } from '@/utils/fetchbreakoutprop';
+import { fetchAllSpotMarkets as fetchAscendexSpotMarkets, fetchAllFuturesMarkets as fetchAscendexFuturesMarkets } from '@/utils/fetchascendex';
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -101,7 +102,9 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           gateSpot,
           phemexSpot,
           phemexFutures,
-          breakoutPropMarkets
+          breakoutPropMarkets,
+          ascendexSpot,
+          ascendexFutures
         ] = await Promise.all([
           fetchWithRetry(() => fetchBinanceSpotMarkets()),
           fetchWithRetry(() => fetchBinanceFuturesMarkets()),
@@ -124,7 +127,9 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           fetchWithRetry(() => fetchAllGateSpotMarkets()),
           fetchWithRetry(() => fetchPhemexSpotMarkets() as Promise<FetchResult>),
           fetchWithRetry(() => fetchPhemexFuturesMarkets() as Promise<FetchResult>),
-          fetchWithRetry(() => fetchBreakoutPropMarkets())
+          fetchWithRetry(() => fetchBreakoutPropMarkets()),
+          fetchWithRetry(() => fetchAscendexSpotMarkets()),
+          fetchWithRetry(() => fetchAscendexFuturesMarkets())
         ]);
 
         const allMarkets: Market[] = [
@@ -149,7 +154,9 @@ export function MixNMatchMode({ isDarkMode }: { isDarkMode: boolean }) {
           ...gateSpot.markets.map(m => ({ ...m, exchange: 'Gate.io', type: 'spot' as const })),
           ...phemexSpot.markets.map(m => ({ ...m, exchange: 'Phemex', type: 'spot' as const })),
           ...phemexFutures.markets.map(m => ({ ...m, exchange: 'Phemex', type: 'futures' as const })),
-          ...breakoutPropMarkets.markets.map(m => ({ ...m, exchange: 'Breakout Prop', type: 'futures' as const }))
+          ...breakoutPropMarkets.markets.map(m => ({ ...m, exchange: 'Breakout Prop', type: 'futures' as const })),
+          ...ascendexSpot.markets.map(m => ({ ...m, exchange: 'AscendEX', type: 'spot' as const })),
+          ...ascendexFutures.markets.map(m => ({ ...m, exchange: 'AscendEX', type: 'futures' as const }))
         ];
 
         const grouped = allMarkets.reduce((acc, market) => {

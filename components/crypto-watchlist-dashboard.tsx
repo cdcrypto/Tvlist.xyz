@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Download, LineChart, Zap, X } from 'lucide-react'
+import { Download, LineChart, Zap, X, ListFilter } from 'lucide-react'
 import { fetchAllSpotMarkets as fetchBinanceSpotMarkets, fetchAllFuturesMarkets as fetchBinanceFuturesMarkets } from '@/utils/fetchmarkets'
 import { fetchAllSpotMarkets as fetchBybitSpotMarkets, fetchAllFuturesMarkets as fetchBybitFuturesMarkets } from '@/utils/fetchbybit'
 import { fetchAllSpotMarkets as fetchBitgetSpotMarkets, fetchAllFuturesMarkets as fetchBitgetFuturesMarkets } from '@/utils/fetchbitget'
@@ -23,11 +23,13 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Header from './Header'
 import { MixNMatchMode } from './MixNMatchMode'
+import { SmartListsMode } from './SmartListsMode'
 import FakeSupportChat from './FakeSupportChat'
 import { fetchAllMarkets as fetchCoinbaseMarkets } from '@/utils/fetchcoinbase';
 import { fetchAllGateSpotMarkets } from '@/utils/fetchgate';
 import { fetchAllSpotMarkets as fetchPhemexSpotMarkets, fetchAllFuturesMarkets as fetchPhemexFuturesMarkets } from '@/utils/fetchphemex';
 import { fetchAllMarkets as fetchBreakoutPropMarkets } from '@/utils/fetchbreakoutprop';
+import { fetchAllSpotMarkets as fetchAscendexSpotMarkets, fetchAllFuturesMarkets as fetchAscendexFuturesMarkets } from '@/utils/fetchascendex';
 import { useTheme } from 'next-themes';
 import { DownloadPopup } from './DownloadPopup'
 
@@ -89,6 +91,10 @@ const spotExchanges = [
   {
     name: 'Phemex',
     logo: 'https://assets.coingecko.com/coins/images/33314/standard/phemex_logo.png?1701959611',
+  },
+  {
+    name: 'AscendEX',
+    logo: 'https://assets.coingecko.com/markets/images/277/large/%E5%8E%9F%E8%89%B2.png?1706864357',
   }
 ]
 
@@ -129,6 +135,10 @@ const futuresExchanges = [
     name: 'Breakout Prop',
     logo: 'https://s3-eu-west-1.amazonaws.com/tpd/logos/64e6c9c34586776535d6e2ba/0x0.png',
   },
+  {
+    name: 'AscendEX',
+    logo: 'https://assets.coingecko.com/markets/images/277/large/%E5%8E%9F%E8%89%B2.png?1706864357',
+  }
   // Gate.io removed from futures exchanges
 ]
 
@@ -235,6 +245,7 @@ export function CryptoWatchlistDashboard() {
   const [hasMixNMatchBeenActivated, setHasMixNMatchBeenActivated] = useState(false);
   const [showSupportChat, setShowSupportChat] = useState(false);
   const [showDownloadPopup, setShowDownloadPopup] = useState(false);
+  const [isSmartListsMode, setIsSmartListsMode] = useState(false);
 
   useEffect(() => {
     // Only run in browser environment
@@ -284,6 +295,8 @@ export function CryptoWatchlistDashboard() {
         fetchFunction = marketType === 'spot' ? fetchPhemexSpotMarkets : fetchPhemexFuturesMarkets;
       } else if (currentExchange === 'Breakout Prop') {
         fetchFunction = fetchBreakoutPropMarkets;
+      } else if (currentExchange === 'AscendEX') {
+        fetchFunction = marketType === 'spot' ? fetchAscendexSpotMarkets : fetchAscendexFuturesMarkets;
       }
       
       if (fetchFunction) {
@@ -336,6 +349,7 @@ export function CryptoWatchlistDashboard() {
     setAllMarkets([])
     setAssetCounts({})
     setQuoteAssets([])
+    setIsSmartListsMode(false)
 
     if (type === 'futures' && !hasSelectedFutures) {
       setShowBackgroundGif(true)
@@ -450,21 +464,30 @@ export function CryptoWatchlistDashboard() {
 
   const resetToHome = useCallback(() => {
     setIsMixNMatchMode(false);
+    setIsSmartListsMode(false);
     setMarketType('spot');
     // Add any other state resets you want to perform
   }, []);
 
   const handleMixNMatchModeChange = (checked: boolean) => {
     setIsMixNMatchMode(checked);
-    if (checked && !hasMixNMatchBeenActivated) {
-      setShowMixNMatchGif(true);
-      setIsPixelated(true);
-      setHasMixNMatchBeenActivated(true);
-      setTimeout(() => {
-        setShowMixNMatchGif(false);
-        setIsPixelated(false);
-      }, 2500); // Changed from 5000 to 2500 milliseconds (2.5 seconds)
+    if (checked) {
+      setIsSmartListsMode(false);
+      if (!hasMixNMatchBeenActivated) {
+        setShowMixNMatchGif(true);
+        setIsPixelated(true);
+        setHasMixNMatchBeenActivated(true);
+        setTimeout(() => {
+          setShowMixNMatchGif(false);
+          setIsPixelated(false);
+        }, 2500); // Changed from 5000 to 2500 milliseconds (2.5 seconds)
+      }
     }
+  };
+
+  const handleSmartListsModeChange = () => {
+    setIsSmartListsMode(prev => !prev);
+    setIsMixNMatchMode(false);
   };
 
   return (
@@ -506,24 +529,29 @@ export function CryptoWatchlistDashboard() {
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
               <div className="w-full sm:w-auto order-2 sm:order-1">
-                {!isMixNMatchMode && (
-                  <div className="flex justify-center sm:justify-start space-x-4">
-                    <Button
-                      variant="default"
-                      onClick={() => handleMarketTypeChange('spot')}
-                      className={`w-40 ${marketType === 'spot' ? colors.button.active : colors.button.inactive}`}
-                    >
-                      <Zap className="mr-2 h-4 w-4" /> Spot Markets
-                    </Button>
-                    <Button
-                      variant="default"
-                      onClick={() => handleMarketTypeChange('futures')}
-                      className={`w-40 ${marketType === 'futures' ? colors.button.active : colors.button.inactive}`}
-                    >
-                      <LineChart className="mr-2 h-4 w-4" /> Futures Markets
-                    </Button>
-                  </div>
-                )}
+                <div className="flex justify-center sm:justify-start space-x-4">
+                  <Button
+                    variant="default"
+                    onClick={() => handleMarketTypeChange('spot')}
+                    className={`w-40 ${marketType === 'spot' && !isMixNMatchMode && !isSmartListsMode ? colors.button.active : colors.button.inactive}`}
+                  >
+                    <Zap className="mr-2 h-4 w-4" /> Spot Markets
+                  </Button>
+                  <Button
+                    variant="default"
+                    onClick={() => handleMarketTypeChange('futures')}
+                    className={`w-40 ${marketType === 'futures' && !isMixNMatchMode && !isSmartListsMode ? colors.button.active : colors.button.inactive}`}
+                  >
+                    <LineChart className="mr-2 h-4 w-4" /> Futures Markets
+                  </Button>
+                  <Button
+                    variant="default"
+                    onClick={handleSmartListsModeChange}
+                    className={`w-40 ${isSmartListsMode ? colors.button.active : colors.button.inactive}`}
+                  >
+                    <ListFilter className="mr-2 h-4 w-4" /> Smart Lists
+                  </Button>
+                </div>
               </div>
               <div className="flex items-center space-x-2 w-full sm:w-auto order-1 sm:order-2 justify-center sm:justify-end">
                 <span>Mix N&apos; Match Mode</span>
@@ -537,6 +565,8 @@ export function CryptoWatchlistDashboard() {
 
             {isMixNMatchMode ? (
               <MixNMatchMode isDarkMode={isDarkMode} />
+            ) : isSmartListsMode ? (
+              <SmartListsMode isDarkMode={isDarkMode} />
             ) : (
               <>
                 {/* Exchange cards */}
